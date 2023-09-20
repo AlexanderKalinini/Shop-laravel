@@ -21,22 +21,30 @@ services:
         depends_on:
             - db
     db:
-        image: mysql
+        image: postgres
         restart: always
         volumes:
-            - ./tmp/db:/var/lib/mysql
+            - ./tmp/db:/var/lib/postgresql/data
         environment:
-            MYSQL_DATABASE: shop
-            MYSQL_ROOT_PASSWORD: root
+            POSTGRES_DB: shop
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+            PGDATA: /var/lib/postgresql/data/pgdata
         ports:
-            - 8100:3306
-        command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+            - 8100:5432
         container_name: db
-    phpmyadmin:
-        image: phpmyadmin
+    # adminer:
+    #     image: adminer
+    #     restart: always
+    #     ports:
+    #         - 8090:8080
+    #     container_name: adminer
+    pgadmin:
+        image: dpage/pgadmin4
         restart: always
         ports:
             - 8090:80
         environment:
-            - PMA_ARBITRARY=1
-        container_name: phpmyadmin
+            - PGADMIN_DEFAULT_EMAIL=bach8616@gmail.com
+            - PGADMIN_DEFAULT_PASSWORD=root
+        container_name: pgadmin

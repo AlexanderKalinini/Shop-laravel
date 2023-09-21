@@ -1,3 +1,4 @@
+/tmp
 /.phpunit.cache
 /node_modules
 /public/build
@@ -5,7 +6,6 @@
 /public/storage
 /storage/*.key
 /vendor
-/tmp
 .env
 .env.backup
 .env.production

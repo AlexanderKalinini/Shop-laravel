@@ -17,28 +17,25 @@ services:
             dockerfile: docker/app/Dockerfile
         volumes:
             - ./:/var/www
+            - ./docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini
         container_name: shop-app
         depends_on:
-            - db
-    db:
-        image: postgres
+            - pgsql
+    pgsql:
+        image: postgres:16-alpine
         restart: always
         volumes:
-            - ./tmp/db:/var/lib/postgresql/data
+            - ./tmp:/var/lib/postgresql/data
+            - ./docker/postgres/:/docker-entrypoint-initdb.d/
         environment:
             POSTGRES_DB: shop
             POSTGRES_USER: root
             POSTGRES_PASSWORD: root
             PGDATA: /var/lib/postgresql/data/pgdata
+            POSTGRES_HOST_AUTH_METHOD: trust
         ports:
             - 8100:5432
-        container_name: db
-    # adminer:
-    #     image: adminer
-    #     restart: always
-    #     ports:
-    #         - 8090:8080
-    #     container_name: adminer
+        container_name: pgsql
     pgadmin:
         image: dpage/pgadmin4
         restart: always

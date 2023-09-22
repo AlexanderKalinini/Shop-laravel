@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
-class CateoryFactory extends Factory
+class CategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +18,8 @@ class CateoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "title" => Str::ucfirst($this->faker->word(2, true)),
+            "slug" => Str::slug($this->faker->word()),
         ];
     }
 }

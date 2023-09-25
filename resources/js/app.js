@@ -1,63 +1,77 @@
-document.addEventListener('DOMContentLoaded', function() {
+import { createInertiaApp } from "@inertiajs/vue3";
+import { createApp, h } from "vue";
 
-	/**
-	 * Mobile menu
-	 */
-	const burgerMenu = document.querySelector('#burgerMenu');
-	const mobileMenu = document.querySelector('#mobileMenu');
-	const mobileMenuNavLink = mobileMenu.querySelectorAll('nav > a');
-	const closeMobileMenu = document.querySelector('#closeMobileMenu');
+createInertiaApp({
+    resolve: (name) => {
+        const pages = import.meta.glob("./Pages/**/*.vue", { eager: true });
+        return pages[`./Pages/${name}.vue`];
+    },
+    setup({ el, App, props, plugin }) {
+        createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .mount(el);
+    },
+});
 
-	function toggleMobileMenu() {
-		mobileMenu.classList.toggle('hidden');
-	}
+document.addEventListener("DOMContentLoaded", function () {
+    /**
+     * Mobile menu
+     */
+    const burgerMenu = document.querySelector("#burgerMenu");
+    const mobileMenu = document.querySelector("#mobileMenu");
+    const mobileMenuNavLink = mobileMenu.querySelectorAll("nav > a");
+    const closeMobileMenu = document.querySelector("#closeMobileMenu");
 
-	burgerMenu.addEventListener('click', function(event) {
-		toggleMobileMenu();
-	});
+    function toggleMobileMenu() {
+        mobileMenu.classList.toggle("hidden");
+    }
 
-	closeMobileMenu.addEventListener('click', function(event) {
-		toggleMobileMenu();
-	});
+    burgerMenu.addEventListener("click", function (event) {
+        toggleMobileMenu();
+    });
 
-	mobileMenuNavLink.forEach(function (el) {
-		el.addEventListener('click', function(event) {
-			toggleMobileMenu();
-		});
-	});
+    closeMobileMenu.addEventListener("click", function (event) {
+        toggleMobileMenu();
+    });
 
-	/**
-	 * Accordion
-	 */
-	const accordionHeader = document.querySelectorAll('.accordion-header');
+    mobileMenuNavLink.forEach(function (el) {
+        el.addEventListener("click", function (event) {
+            toggleMobileMenu();
+        });
+    });
 
-	accordionHeader.forEach((header) => {
-		header.addEventListener('click', function () {
-			const accordionContent = header.parentElement.querySelector('.accordion-content');
-			// let accordionMaxHeight = accordionContent.style.maxHeight;
+    /**
+     * Accordion
+     */
+    const accordionHeader = document.querySelectorAll(".accordion-header");
 
-			// Condition handling
-			if (accordionContent.classList.contains('hidden')) {
-				accordionContent.classList.remove('hidden');
-				header.classList.add('_is-toggled');
-			} else {
-				accordionContent.classList.add('hidden');
-				header.classList.remove('_is-toggled');
-			}
-		});
-	});
+    accordionHeader.forEach((header) => {
+        header.addEventListener("click", function () {
+            const accordionContent =
+                header.parentElement.querySelector(".accordion-content");
+            // let accordionMaxHeight = accordionContent.style.maxHeight;
 
-	/**
-	 * Anchor smooth scroll
-	 */
-	document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-		anchor.addEventListener('click', function (e) {
-			e.preventDefault();
+            // Condition handling
+            if (accordionContent.classList.contains("hidden")) {
+                accordionContent.classList.remove("hidden");
+                header.classList.add("_is-toggled");
+            } else {
+                accordionContent.classList.add("hidden");
+                header.classList.remove("_is-toggled");
+            }
+        });
+    });
 
-			document.querySelector(this.getAttribute('href')).scrollIntoView({
-				behavior: 'smooth'
-			});
-		});
-	});
+    /**
+     * Anchor smooth scroll
+     */
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
 
+            document.querySelector(this.getAttribute("href")).scrollIntoView({
+                behavior: "smooth",
+            });
+        });
+    });
 });

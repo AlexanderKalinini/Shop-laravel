@@ -10,7 +10,8 @@ class Producer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['thumbnail', 'title'];
+
+
 
     protected static function boot(): void
     {

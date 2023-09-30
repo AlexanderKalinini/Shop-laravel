@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return inertia('Welcome');
-});
+Route::get('/{page}', [Controller::class, 'index'])->where('page', '.*');
+// Route::middleware('guest')->group(function () {
+//
+//     Route::get('login', [AuthController::class, 'showLogin'])->name('showLogin');
+//     Route::get('login-mail', [AuthController::class, 'showLoginOnMail'])->name('loginOnMail');
+//     Route::post('login-process', [AuthController::class, 'loginProcess'])->name('loginProcess');
+//     Route::get('lost-password', [AuthController::class, 'showLostPassword'])->name('formLostPassword');
+//
+//     Route::get('sign-up', [AuthController::class, 'showReg'])->name('showSignUp');
+//     Route::get('sign-up-mail', [AuthController::class, 'showRegOnMail'])->name('signUpOnMail');
+//     Route::post('sign-up-process', [AuthController::class, 'signUpProcess'])->name('signUpProcess');
+// });
+//
+// Route::middleware('auth')->group(function () {
+// });

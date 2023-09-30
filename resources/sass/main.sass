@@ -4,7 +4,7 @@
 		font-style: $font_style
 		font-weight: $font_weight
 		font-display: swap
-		src: url('../fonts/#{$font_file}.woff2') format('woff2')
+		src: url('../../storage/app/public/fonts/#{$font_file}.woff2',) format('woff2')
 
 @include font('Gilroy', normal, 400, 'Gilroy-Regular')
 @include font('Gilroy', normal, 500, 'Gilroy-Medium')
@@ -80,3 +80,12 @@ textarea._is-error
 		&:hover
 			> img
 				transform: scale(1.1)
+.dropdown-transition-enter
+	opacity: 1
+	transition: all 300 ease-out
+
+
+.dropdown-transition-leave
+	opacity: 0
+	transition: opacity 150 ease-in
+

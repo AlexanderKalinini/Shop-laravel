@@ -15,7 +15,7 @@ export default {
             class="product-card-photo overflow-hidden h-[320px] rounded-3xl"
         >
             <img
-                v-bind:src="'/public/storage/images/products/' + n + '.jpg'"
+                v-bind:src="'images/products/' + n + '.jpg'"
                 class="object-cover w-full h-full"
                 alt="SteelSeries Aerox 3 Snow"
             />

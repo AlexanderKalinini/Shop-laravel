@@ -21,7 +21,7 @@ export default {
                         rel="home"
                     >
                         <img
-                            src="/public/storage/images/logo.svg"
+                            src="images/logo.svg"
                             class="h-[38px] w-[155px]"
                             alt="CutCode"
                         />
@@ -52,7 +52,7 @@ export default {
                         >
                             <img
                                 class="h-5 lg:h-6"
-                                src="/public/storage/images/icons/youtube.svg"
+                                src="images/icons/youtube.svg"
                                 alt="YouTube"
                             />
                             <span class="ml-2 text-xxs font-semibold lg:ml-3"
@@ -67,7 +67,7 @@ export default {
                         >
                             <img
                                 class="h-5 lg:h-6"
-                                src="/public/storage/images/icons/telegram.svg"
+                                src="images/icons/telegram.svg"
                                 alt="Telegram"
                             />
                             <span class="ml-2 text-xxs font-semibold lg:ml-3"

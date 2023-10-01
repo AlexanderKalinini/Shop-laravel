@@ -15,7 +15,7 @@ export default {
             <div class="text-center">
                 <router-link to="/" class="inline-block" rel="home">
                     <img
-                        src="storage/images/logo.svg"
+                        src="images/logo.svg"
                         class="w-[148px] md:w-[201px] h-[36px] md:h-[50px]"
                         alt="CutCode"
                     />

@@ -208,7 +208,7 @@ export default {
                         >
                             <div class="h-12 md:h-16">
                                 <img
-                                    src="/public/storage/images/brands/1.png"
+                                    src="images/brands/1.png"
                                     class="h-full w-full object-contain"
                                     alt="Steelseries"
                                 />
@@ -225,7 +225,7 @@ export default {
                         >
                             <div class="h-12 md:h-16">
                                 <img
-                                    src="/public/storage/images/brands/2.png"
+                                    src="images/brands/2.png"
                                     class="h-full w-full object-contain"
                                     alt="Razer"
                                 />
@@ -242,11 +242,10 @@ export default {
                         >
                             <div class="h-12 md:h-16">
                                 <img
-                                    src="/public/storage/images/brands/3.png"
+                                    src="images/brands/3.png"
                                     class="h-full w-full object-contain"
                                     alt="Logitech"
                                 />
-                                src="/public/storage/images/brands/3.png"
                             </div>
                             <div
                                 class="mt-8 text-center text-xs font-semibold sm:text-sm lg:text-md"
@@ -260,7 +259,7 @@ export default {
                         >
                             <div class="h-12 md:h-16">
                                 <img
-                                    src="/public/storage/images/brands/4.png"
+                                    src="images/brands/4.png"
                                     class="h-full w-full object-contain"
                                     alt="HyperX"
                                 />
@@ -277,7 +276,7 @@ export default {
                         >
                             <div class="h-12 md:h-16">
                                 <img
-                                    src="/public/storage/images/brands/5.png"
+                                    src="images/brands/5.png"
                                     class="h-full w-full object-contain"
                                     alt="Playstation"
                                 />
@@ -294,7 +293,7 @@ export default {
                         >
                             <div class="h-12 md:h-16">
                                 <img
-                                    src="/public/storage/images/brands/6.png"
+                                    src="images/brands/6.png"
                                     class="h-full w-full object-contain"
                                     alt="XBOX"
                                 />

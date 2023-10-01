@@ -10,7 +10,7 @@ import { Link } from "@inertiajs/vue3";
             <div class="text-center">
                 <Link href="/" class="inline-block" rel="home">
                     <img
-                        src="storage/images/logo.svg"
+                        src="images/logo.svg"
                         class="w-[148px] md:w-[201px] h-[36px] md:h-[50px]"
                         alt="CutCode"
                     />

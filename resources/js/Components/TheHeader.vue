@@ -27,7 +27,7 @@ export default {
                 <div class="header-logo shrink-0">
                     <router-link to="/" rel="home">
                         <img
-                            src="/public/images/logo.svg"
+                            src="images/logo.svg"
                             class="h-[30px] w-[120px] xs:h-[36px] xs:w-[148px] md:h-[50px] md:w-[201px]"
                             alt="Shop"
                         />
@@ -114,7 +114,7 @@ export default {
                         >
                             <span class="sr-only">Профиль</span>
                             <img
-                                src="/public/storage/images/avatar.jpg"
+                                src="images/avatar.jpg"
                                 class="h-7 w-7 shrink-0 rounded-full md:h-9 md:w-9"
                                 alt="Александр Калинин"
                             />

@@ -81,7 +81,7 @@ export default {
                 <!-- /.header-menu -->
                 <div class="header-actions flex items-center gap-3 md:gap-5">
                     <router-link
-                        to="login"
+                        to="/login"
                         class="profile hidden items-center xs:flex"
                     >
                         <svg

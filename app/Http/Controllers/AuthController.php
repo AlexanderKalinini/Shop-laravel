@@ -4,49 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
-
-
+use App\Models\User;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Authenticate
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function showLogin()
+    public function signUpProcess(SignUpRequest $request)
     {
-        return inertia("LoginPage");
-    }
+        $credentials = $request->validated();
 
-    public function showLoginOnMail()
-    {
-        return inertia("LoginOnMail");
+        $user = User::create([
+            'name' => $credentials["name"],
+            'email' => $credentials["email"],
+            'password' => Hash::make($credentials["password"]),
+        ]);
+
+        if ($user) {
+            auth()->login($user);
+        }
+
+        return $user;
     }
 
     public function loginProcess(LoginRequest $request)
     {
-    }
-
-    public function showReg()
-    {
-        return inertia("RegPage");
-    }
-    public function showRegOnMail()
-    {
-        return inertia("RegistrationMailPage");
-    }
-
-    public function signUpProcess(SignUpRequest $request)
-    {
-        $credentials = $request->validated();
-        dd($credentials);
-        return to_route("home");
-    }
-
-    public function showLostPassword()
-    {
-        return inertia("LostPassword");
     }
 }

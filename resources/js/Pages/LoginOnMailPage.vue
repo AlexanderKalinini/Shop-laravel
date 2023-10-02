@@ -56,7 +56,7 @@
                 >
                     <li>
                         <router-link
-                            to="#"
+                            to="/"
                             class="inline-block text-white hover:text-white/70 text-xxs md:text-xs font-medium"
                             target="_blank"
                             rel="noopener"
@@ -68,7 +68,7 @@
                     </li>
                     <li>
                         <router-link
-                            to="#"
+                            to="/"
                             class="inline-block text-white hover:text-white/70 text-xxs md:text-xs font-medium"
                             target="_blank"
                             rel="noopener"

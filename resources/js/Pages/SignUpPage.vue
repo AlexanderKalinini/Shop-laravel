@@ -5,13 +5,13 @@
         <div class="container">
             <!-- Page heading -->
             <div class="text-center">
-                <a href="/" class="inline-block" rel="home">
+                <router-link to="/" class="inline-block" rel="home">
                     <img
                         src="images/logo.svg"
                         class="w-[148px] md:w-[201px] h-[36px] md:h-[50px]"
                         alt="CutCode"
                     />
-                </a>
+                </router-link>
             </div>
 
             <div
@@ -20,8 +20,8 @@
                 <h1 class="mb-5 text-lg font-semibold">Регистрация</h1>
                 <ul class="space-y-3">
                     <li>
-                        <a
-                            href="/sign-up-mail"
+                        <router-link
+                            to="/sign-up-mail"
                             class="relative flex items-center h-14 px-12 rounded-lg border border-[#A07BF0] bg-white/20 hover:bg-white/20 active:bg-white/10 active:translate-y-0.5"
                         >
                             <svg
@@ -38,11 +38,11 @@
                                 class="grow text-xxs md:text-xs font-bold text-center"
                                 >Почта</span
                             >
-                        </a>
+                        </router-link>
                     </li>
                     <li>
-                        <a
-                            href="/showRegOnGit"
+                        <router-link
+                            to="/"
                             class="relative flex items-center h-14 px-12 rounded-lg border border-[#A07BF0] bg-white/20 hover:bg-white/20 active:bg-white/10 active:translate-y-0.5"
                         >
                             <svg
@@ -61,16 +61,16 @@
                                 class="grow text-xxs md:text-xs font-bold text-center"
                                 >GitHub</span
                             >
-                        </a>
+                        </router-link>
                     </li>
                 </ul>
                 <div class="space-y-3 mt-5">
                     <div class="text-xxs md:text-xs">
                         Есть аккаунт?
-                        <a
-                            href="/login"
+                        <router-link
+                            to="/login"
                             class="text-white hover:text-white/70 font-bold underline underline-offset-4"
-                            >Войти</a
+                            >Войти</router-link
                         >
                     </div>
                 </div>
@@ -78,24 +78,24 @@
                     class="flex flex-col md:flex-row justify-between gap-3 md:gap-4 mt-14 md:mt-20"
                 >
                     <li>
-                        <a
-                            href="#"
+                        <router-link
+                            to="#"
                             class="inline-block text-white hover:text-white/70 text-xxs md:text-xs font-medium"
                             target="_blank"
                             rel="noopener"
-                            >Пользовательское соглашение</a
+                            >Пользовательское соглашение</router-link
                         >
                     </li>
                     <li class="hidden md:block">
                         <div class="h-full w-[2px] bg-white/20"></div>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <router-link
+                            to="#"
                             class="inline-block text-white hover:text-white/70 text-xxs md:text-xs font-medium"
                             target="_blank"
                             rel="noopener"
-                            >Политика конфиденциальности</a
+                            >Политика конфиденциальности</router-link
                         >
                     </li>
                 </ul>

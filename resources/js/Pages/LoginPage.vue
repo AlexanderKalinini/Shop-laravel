@@ -75,7 +75,7 @@ export default {
                 <div class="space-y-3 mt-5">
                     <div class="text-xxs md:text-xs">
                         <router-link
-                            to="sign-up"
+                            to="/sign-up"
                             class="text-white hover:text-white/70 font-bold"
                             >Регистрация</router-link
                         >

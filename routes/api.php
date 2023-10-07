@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\GetController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-Route::post('sign-up-process', [AuthController::class, 'SignUpProcess'])->name('signUpProcess');
+Route::post("/sign-up-mail", [AuthController::class, "signUp"])->name("signUp");
+Route::post("/login", [AuthController::class, "login"])->name("login");
+Route::post("/logout", [AuthController::class, "logout"])->name("logout");
+
+
+
+
+
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::get(
+        '/getUser',
+        GetController::class
+    );
+});

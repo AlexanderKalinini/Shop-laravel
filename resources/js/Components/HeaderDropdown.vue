@@ -1,3 +1,18 @@
+<script>
+import axios from "axios";
+
+export default {
+    props: {
+        userName: String,
+    },
+    methods: {
+        logout() {
+            axios.post("api/logout");
+            this.$store.commit("getUser", null);
+        },
+    },
+};
+</script>
 <template>
     <div
         class="absolute -right-20 top-0 z-50 mt-14 w-[280px] rounded-lg bg-card p-4 shadow-xl xs:-right-8 sm:right-0 sm:w-[300px]"
@@ -9,9 +24,9 @@
                 class="h-11 w-11 rounded-full"
                 alt="Александр Калинин"
             />
-            <span class="ml-3 text-xs font-bold md:text-sm"
-                >Александр Калинин</span
-            >
+            <span class="ml-3 text-xs font-bold md:text-sm">{{
+                userName
+            }}</span>
         </div>
         <div class="mt-4">
             <ul class="space-y-2">
@@ -32,8 +47,8 @@
             </ul>
         </div>
         <div class="mt-6">
-            <router-link
-                to="#"
+            <button
+                @click="logout"
                 class="inline-flex items-center text-body hover:text-pink"
             >
                 <svg
@@ -50,7 +65,7 @@
                     />
                 </svg>
                 <span class="ml-2 font-medium">Выйти</span>
-            </router-link>
+            </button>
         </div>
     </div>
 </template>

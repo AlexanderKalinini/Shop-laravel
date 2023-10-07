@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\AuthController;
+
+use Illuminate\Support\Facades\Auth;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +18,7 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::get('/{page}', [Controller::class, 'index'])->where('page', '.*');
+Route::get('/{page}', Controller::class)->where('page', '.*');
 // Route::middleware('guest')->group(function () {
 //
 //     Route::get('login', [AuthController::class, 'showLogin'])->name('showLogin');

@@ -12,16 +12,13 @@ export default {
             errors: null,
         };
     },
+
     methods: {
-        async getToken() {
-            await axios.get("/sanctum/csrf-cookie");
-        },
         async submit() {
-            await this.getToken();
-            axios.defaults.withCredentials = true;
+            await axios.get("/sanctum/csrf-cookie");
             try {
                 await axios.post(
-                    "/api/sign-up-process",
+                    "/api/sign-up-mail",
                     {
                         name: this.name,
                         email: this.email,
@@ -34,9 +31,10 @@ export default {
                         },
                     }
                 );
+                this.$store.dispatch("fetchUser");
                 router.push("/");
-            } catch (e) {
-                console.log((this.errors = e.response.data.errors));
+            } catch (err) {
+                this.errors = err.response.data.errors;
             }
         },
     },

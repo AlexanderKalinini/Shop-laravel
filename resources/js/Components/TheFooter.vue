@@ -1,9 +1,7 @@
 <script>
-import FooterMobileMenu from "./FooterMobileMenu.vue";
 import FooterModals from "./FooterModals.vue";
 export default {
     components: {
-        FooterMobileMenu,
         FooterModals,
     },
 };
@@ -81,6 +79,5 @@ export default {
         </div>
         <!-- /.container -->
     </footer>
-    <FooterMobileMenu />
     <FooterModals />
 </template>

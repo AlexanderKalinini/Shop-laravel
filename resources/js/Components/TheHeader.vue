@@ -1,23 +1,32 @@
 <script>
-import { RouterLink } from "vue-router";
+import BurgerMenu from "./BurgerMenu.vue";
 import HeaderDropdown from "./HeaderDropdown.vue";
 
 export default {
     components: {
         HeaderDropdown,
-        RouterLink,
+        BurgerMenu,
+    },
+    computed: {
+        userName() {
+            return this.$store?.state?.user?.name;
+        },
     },
     data() {
-        return { dropdownProfile: false };
+        return {
+            dropdownProfile: false,
+        };
     },
     methods: {
-        openCloseDropdown() {
+        toggleDropdown() {
+            console.log(this.dropdownProfile);
             this.dropdownProfile = !this.dropdownProfile;
         },
     },
 };
 </script>
 <template>
+    <BurgerMenu :userName="userName" />
     <!-- Site header -->
     <header class="header pt-6 xl:pt-12">
         <div class="container">
@@ -60,7 +69,7 @@ export default {
                             </svg>
                         </button>
                     </form>
-                    <nav class="hidden gap-8 2xl:flex">
+                    <nav class="gap-8 hidden 2xl:flex">
                         <router-link
                             to="/"
                             class="font-bold text-white hover:text-pink"
@@ -82,6 +91,7 @@ export default {
                 <div class="header-actions flex items-center gap-3 md:gap-5">
                     <router-link
                         to="/login"
+                        v-if="!userName"
                         class="profile hidden items-center xs:flex"
                     >
                         <svg
@@ -106,21 +116,20 @@ export default {
                             >Войти</span
                         >
                     </router-link>
-
-                    <div class="profile relative" v-if="false">
+                    <div class="profile relative" v-if="userName">
                         <button
-                            @click="openCloseDropdown()"
+                            @click="toggleDropdown()"
                             class="flex items-center text-white transition hover:text-pink"
                         >
                             <span class="sr-only">Профиль</span>
                             <img
                                 src="images/avatar.jpg"
                                 class="h-7 w-7 shrink-0 rounded-full md:h-9 md:w-9"
-                                alt="Александр Калинин"
+                                alt="User image"
                             />
-                            <span class="ml-2 hidden font-medium md:block"
-                                >Александр</span
-                            >
+                            <span class="ml-2 hidden font-medium md:block">{{
+                                userName
+                            }}</span>
                             <svg
                                 class="ml-2 h-3 w-3 shrink-0"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +144,7 @@ export default {
                             </svg>
                         </button>
                         <transition
-                            @click="openCloseDropdown"
+                            @click="toggleDropdown"
                             enter-from-class="opacity-0"
                             enter-active-class="ease-out duration-500"
                             enter-to-class="opacity-100"
@@ -143,7 +152,10 @@ export default {
                             leave-from-class="opacity-100"
                             leave-to-class="opacity-0"
                         >
-                            <HeaderDropdown v-if="dropdownProfile" />
+                            <HeaderDropdown
+                                v-if="dropdownProfile"
+                                :userName="userName"
+                            />
                         </transition>
                     </div>
                     <router-link

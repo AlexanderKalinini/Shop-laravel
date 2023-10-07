@@ -1,3 +1,18 @@
+<script>
+import axios from "axios";
+export default {
+    props: {
+        userName: String,
+    },
+
+    methods: {
+        async logout() {
+            await axios.post("api/logout");
+            this.$store.commit("getUser", null);
+        },
+    },
+};
+</script>
 <template>
     <div id="mobileMenu" class="hidden bg-white fixed inset-0 z-[9999]">
         <div class="container">
@@ -47,12 +62,12 @@
                         class="w-14 h-14 rounded-full"
                         alt="Александр Калинин"
                     />
-                    <div class="flex flex-col items-start ml-4">
-                        <span class="text-dark text-xs md:text-sm font-bold"
-                            >Александр Калинин</span
-                        >
-                        <router-link
-                            to="#"
+                    <div class="flex flex-col items-start ml-4" v-if="userName">
+                        <span class="text-dark text-xs md:text-sm font-bold">{{
+                            userName
+                        }}</span>
+                        <button
+                            @click="logout"
                             class="inline-flex items-center text-dark hover:text-pink"
                         >
                             <svg
@@ -69,12 +84,12 @@
                                 />
                             </svg>
                             <span class="ml-[6px] font-medium">Выйти</span>
-                        </router-link>
+                        </button>
                     </div>
                 </div>
                 <nav class="flex flex-col mt-8">
                     <router-link
-                        to="index.html"
+                        to="/"
                         class="self-start py-1 text-dark hover:text-pink text-md font-bold"
                         >Главная</router-link
                     >

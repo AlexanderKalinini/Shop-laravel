@@ -1,8 +1,15 @@
 <script>
+import axios from "axios";
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
 export default {
     components: {
         LayoutComponent,
+    },
+    methods: {
+        async get() {
+            const res = await axios.get("api/getUser");
+            console.log(res.data.name);
+        },
     },
 };
 </script>
@@ -49,9 +56,9 @@ export default {
                         </router-link>
                     </li>
                     <li>
-                        <router-link
-                            to="#"
-                            class="relative flex items-center h-14 px-12 rounded-lg border border-[#A07BF0] bg-white/20 hover:bg-white/20 active:bg-white/10 active:translate-y-0.5"
+                        <button
+                            @click="get"
+                            class="relative flex items-center h-14 w-full px-12 rounded-lg border border-[#A07BF0] bg-white/20 hover:bg-white/20 active:bg-white/10 active:translate-y-0.5"
                         >
                             <svg
                                 class="shrink-0 absolute left-4 w-5 sm:w-6 h-5 sm:h-6"
@@ -69,7 +76,7 @@ export default {
                                 class="grow text-xxs md:text-xs font-bold text-center"
                                 >GitHub</span
                             >
-                        </router-link>
+                        </button>
                     </li>
                 </ul>
                 <div class="space-y-3 mt-5">

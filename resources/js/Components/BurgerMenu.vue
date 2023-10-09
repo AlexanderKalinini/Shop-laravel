@@ -94,17 +94,17 @@ export default {
                         >Главная</router-link
                     >
                     <router-link
-                        to="catalog.html"
+                        to="#"
                         class="self-start py-1 text-dark hover:text-pink text-md font-bold"
                         >Каталог товаров</router-link
                     >
                     <router-link
-                        to="orders.html"
+                        to="#"
                         class="self-start py-1 text-dark hover:text-pink text-md font-bold"
                         >Мои заказы</router-link
                     >
                     <router-link
-                        to="cart.html"
+                        to="#"
                         class="self-start py-1 text-dark hover:text-pink text-md font-bold"
                         >Корзина</router-link
                     >

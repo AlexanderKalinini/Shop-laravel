@@ -10,8 +10,7 @@ use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Hash;
-
-
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Authenticate
 {
@@ -57,5 +56,16 @@ class AuthController extends Authenticate
         $request->session()->regenerateToken();
 
         return 'redirect;';
+    }
+
+    public function sendPass(Request $request)
+    {
+
+        $credentials = $request->validate([
+            'email' => ['email', 'required',],
+        ]);
+
+        // Mail::to($credentials['email'])->send(new SignupRequest($r));
+        return $credentials;
     }
 }

@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     burgerMenu.addEventListener("click", function (event) {
-        console.log("");
         toggleMobileMenu();
     });
 
@@ -49,13 +48,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-
-            document.querySelector(this.getAttribute("href")).scrollIntoView({
-                behavior: "smooth",
-            });
-        });
-    });
+    //     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    //         anchor.addEventListener("click", function (e) {
+    //             e.preventDefault();
+    //
+    //             document.querySelector(this.getAttribute("href")).scrollIntoView({
+    //                 behavior: "smooth",
+    //             });
+    //         });
+    //     });
 });

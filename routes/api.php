@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post("/sign-up-mail", [AuthController::class, "signUp"])->name("signUp");
 Route::post("/login", [AuthController::class, "login"])->name("login");
+Route::post("/send-pass", [AuthController::class, "sendPass"])->name("sendPass");
 Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 
 

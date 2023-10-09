@@ -19,7 +19,6 @@ export default {
     },
     methods: {
         toggleDropdown() {
-            console.log(this.dropdownProfile);
             this.dropdownProfile = !this.dropdownProfile;
         },
     },

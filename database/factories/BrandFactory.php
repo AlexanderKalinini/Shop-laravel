@@ -20,7 +20,7 @@ class BrandFactory extends Factory
         return [
             "title" => ucfirst($this->faker->word()),
             "slug" => Str::slug($this->faker->company()),
-            "thumbnail" => '',
+            "thumbnail" => $this->faker->url(),
 
         ];
     }

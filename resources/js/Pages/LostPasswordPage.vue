@@ -1,5 +1,6 @@
 <script>
 import axios from "axios";
+import router from "../router/router";
 
 export default {
     data() {
@@ -24,8 +25,9 @@ export default {
                     }
                 );
                 console.log(res);
+                router.push("/");
             } catch (err) {
-                this.error = err.response.data.message;
+                this.error = err.response?.data?.message;
             }
         },
     },

@@ -5,7 +5,7 @@ export default {
         LayoutComponent,
     },
     methods: {
-        async authWithGithub(driver) {
+        async authWith(driver) {
             window.location.href = `http://localhost:8080/api/auth/${driver}/redirect`;
         },
     },
@@ -55,7 +55,7 @@ export default {
                     </li>
                     <li>
                         <button
-                            @click.prevent="authWithGithub('github')"
+                            @click.prevent="authWith('github')"
                             class="relative flex items-center h-14 w-full px-12 rounded-lg border border-[#A07BF0] bg-white/20 hover:bg-white/20 active:bg-white/10 active:translate-y-0.5"
                         >
                             <svg

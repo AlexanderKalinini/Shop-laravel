@@ -29,6 +29,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     );
 });
 
+Route::post("/sign-up-mail", [AuthController::class, "signUp"])->name("signUp");
+Route::post("/login", [AuthController::class, "login"])->name("login");
+Route::post("/send-pass", [AuthController::class, "sendPass"])->name("send.pass");
+Route::post("/reset-password", [AuthController::class, "resetPass"])->name("reset.pass");
+Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 
 

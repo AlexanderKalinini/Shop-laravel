@@ -1,14 +1,12 @@
 <script>
-import axios from "axios";
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
 export default {
     components: {
         LayoutComponent,
     },
     methods: {
-        async get() {
-            const res = await axios.get("api/getUser");
-            console.log(res.data.name);
+        async authWithGithub(driver) {
+            window.location.href = `http://localhost:8080/api/auth/${driver}/redirect`;
         },
     },
 };
@@ -57,7 +55,7 @@ export default {
                     </li>
                     <li>
                         <button
-                            @click="get"
+                            @click.prevent="authWithGithub('github')"
                             class="relative flex items-center h-14 w-full px-12 rounded-lg border border-[#A07BF0] bg-white/20 hover:bg-white/20 active:bg-white/10 active:translate-y-0.5"
                         >
                             <svg

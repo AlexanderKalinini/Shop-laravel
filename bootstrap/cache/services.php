@@ -30,11 +30,12 @@
     26 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     27 => 'Termwind\\Laravel\\TermwindServiceProvider',
     28 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
-    29 => 'App\\Providers\\AppServiceProvider',
-    30 => 'App\\Providers\\AuthServiceProvider',
-    31 => 'App\\Providers\\EventServiceProvider',
-    32 => 'App\\Providers\\RouteServiceProvider',
-    33 => 'App\\Providers\\TelescopeServiceProvider',
+    29 => 'Laravel\\Socialite\\SocialiteServiceProvider',
+    30 => 'App\\Providers\\AppServiceProvider',
+    31 => 'App\\Providers\\AuthServiceProvider',
+    32 => 'App\\Providers\\EventServiceProvider',
+    33 => 'App\\Providers\\RouteServiceProvider',
+    34 => 'App\\Providers\\TelescopeServiceProvider',
   ),
   'eager' => 
   array (
@@ -202,6 +203,7 @@
     'Laravel\\Sail\\Console\\InstallCommand' => 'Laravel\\Sail\\SailServiceProvider',
     'Laravel\\Sail\\Console\\PublishCommand' => 'Laravel\\Sail\\SailServiceProvider',
     'command.tinker' => 'Laravel\\Tinker\\TinkerServiceProvider',
+    'Laravel\\Socialite\\Contracts\\Factory' => 'Laravel\\Socialite\\SocialiteServiceProvider',
   ),
   'when' => 
   array (
@@ -245,6 +247,9 @@
     array (
     ),
     'Laravel\\Tinker\\TinkerServiceProvider' => 
+    array (
+    ),
+    'Laravel\\Socialite\\SocialiteServiceProvider' => 
     array (
     ),
   ),

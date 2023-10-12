@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('producers', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('slug');
-            $table->string('thumbnail');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('github_id')->nullable();
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('producers');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

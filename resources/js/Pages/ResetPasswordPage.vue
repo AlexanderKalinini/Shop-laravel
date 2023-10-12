@@ -3,31 +3,41 @@ import axios from "axios";
 import router from "../router/router";
 
 export default {
+    props: {
+        token: String,
+        email: String,
+    },
     data() {
         return {
-            email: null,
-            error: null,
+            password: null,
+            password_confirmation: null,
+            errorMessage: null,
         };
     },
     methods: {
-        async sendPass() {
+        async resetPassword() {
             await axios.get("/sanctum/csrf-cookie");
             try {
                 const res = await axios.post(
-                    "/api/send-pass",
+                    "/api/reset-password",
                     {
+                        token: this.token,
                         email: this.email,
+                        password: this.password,
+                        password_confirmation: this.password_confirmation,
                     },
                     {
                         headers: {
                             "Content-Type": "multipart/form-data",
+                            Accept: "application/json",
                         },
                     }
                 );
                 console.log(res);
-                router.push("/");
+                router.push("/login-mail");
             } catch (err) {
-                this.error = err.response?.data?.message;
+                console.log(err);
+                this.errorMessage = err?.response?.data;
             }
         },
     },
@@ -52,54 +62,58 @@ export default {
             <div
                 class="max-w-[640px] mt-12 mx-auto p-6 xs:p-8 md:p-12 2xl:p-16 rounded-[20px] bg-purple"
             >
-                <h1 class="mb-5 text-lg font-semibold">Восстановить пароль</h1>
+                <h1 class="mb-5 text-lg font-semibold">Введите новый пароль</h1>
                 <form class="space-y-3">
-                    <input
+                    <!-- <input
                         v-model="email"
                         type="email"
                         class="w-full h-14 px-4 rounded-lg border border-[#A07BF0] bg-white/20 focus:border-pink focus:shadow-[0_0_0_2px_#EC4176] outline-none transition text-white placeholder:text-white text-xxs md:text-xs font-semibold"
                         placeholder="E-mail"
+                    /> -->
+                    <input
+                        v-model="password"
+                        type="password"
+                        class="w-full h-14 px-4 rounded-lg border border-[#A07BF0] bg-white/20 focus:border-pink focus:shadow-[0_0_0_2px_#EC4176] outline-none transition text-white placeholder:text-white text-xxs md:text-xs font-semibold"
+                        placeholder="Новый пароль"
                     />
-                    <ul v-if="error" class="mt-3 text-pink text-xxs xs:text-xs">
-                        {{
-                            error
-                        }}
-                    </ul>
+                    <input
+                        v-model="password_confirmation"
+                        type="password"
+                        class="w-full h-14 px-4 rounded-lg border border-[#A07BF0] bg-white/20 focus:border-pink focus:shadow-[0_0_0_2px_#EC4176] outline-none transition text-white placeholder:text-white text-xxs md:text-xs font-semibold"
+                        placeholder="Подтверждение пароля"
+                    />
+                    <div
+                        v-if="errorMessage"
+                        class="mt-3 text-pink text-xxs xs:text-xs"
+                    >
+                        {{ errorMessage }}
+                    </div>
                     <button
-                        @click.prevent="sendPass"
+                        @click.prevent="resetPassword"
                         type="submit"
                         class="w-full btn btn-pink"
                     >
-                        Отправить
+                        Сохранить пароль
                     </button>
                 </form>
-                <div class="space-y-3 mt-5">
-                    <div class="text-xxs md:text-xs">
-                        <router-link
-                            to="sign-up-mail"
-                            class="text-white hover:text-white/70 font-bold"
-                            >Регистрация</router-link
-                        >
-                    </div>
-                </div>
                 <ul
                     class="flex flex-col md:flex-row justify-between gap-3 md:gap-4 mt-14 md:mt-20"
                 >
                     <li>
-                        <button
+                        <router-link
+                            to="/"
                             class="inline-block text-white hover:text-white/70 text-xxs md:text-xs font-medium"
                             target="_blank"
                             rel="noopener"
+                            >Пользовательское соглашение</router-link
                         >
-                            Пользовательское соглашение
-                        </button>
                     </li>
                     <li class="hidden md:block">
                         <div class="h-full w-[2px] bg-white/20"></div>
                     </li>
                     <li>
                         <router-link
-                            to="#"
+                            to="/"
                             class="inline-block text-white hover:text-white/70 text-xxs md:text-xs font-medium"
                             target="_blank"
                             rel="noopener"

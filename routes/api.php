@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthGitHubController;
 use App\Http\Controllers\GetController;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 /*
@@ -17,13 +20,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::post("/sign-up-mail", [AuthController::class, "signUp"])->name("signUp");
-Route::post("/login", [AuthController::class, "login"])->name("login");
-Route::post("/send-pass", [AuthController::class, "sendPass"])->name("sendPass");
-Route::post("/logout", [AuthController::class, "logout"])->name("logout");
-
-
-
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -32,3 +28,17 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         GetController::class
     );
 });
+
+Route::post("/logout", [AuthController::class, "logout"])->name("logout");
+
+
+Route::group(
+    ['middleware' => 'web'],
+    function () {
+        Route::get('/auth/github/redirect', [AuthGitHubController::class, 'redirect'])
+            ->name('github.redirect');
+        Route::get('/auth/github/callback', [AuthGitHubController::class, 'callback'])->name('github.callback');
+    }
+);
+Route::get('/qwer', function (string $token) {
+})->name('password.reset');

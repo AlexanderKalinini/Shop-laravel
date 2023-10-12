@@ -6,8 +6,9 @@ export default {
         userName: String,
     },
     methods: {
-        logout() {
-            axios.post("api/logout");
+        async logout() {
+            await axios.get("/sanctum/csrf-cookie");
+            await axios.post("/api/logout");
             this.$store.commit("getUser", null);
         },
     },

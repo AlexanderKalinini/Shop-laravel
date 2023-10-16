@@ -12,8 +12,7 @@ class ProductSeeder extends Seeder
 
     public function run(): void
     {
-        Product::factory(25)
-            ->has(Category::factory(2),)
-            ->create();
+        $categories = Category::factory(3)->create();
+        Product::factory(25)->hasAttached($categories)->create();
     }
 }

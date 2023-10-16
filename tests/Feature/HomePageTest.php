@@ -11,7 +11,7 @@ class HomePageTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_example(): void
+    public function test_home_page(): void
     {
         $response = $this->get('/');
 

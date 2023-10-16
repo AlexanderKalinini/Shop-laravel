@@ -4,11 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Article;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Order;
-use App\Models\Product;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,7 +18,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             BrandSeeder::class,
             ProducerSeeder::class,
-
             ProductSeeder::class,
         ]);
     }

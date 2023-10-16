@@ -20,6 +20,8 @@ class Product extends Model
         'old_price',
         'brand_id',
         'producer_id',
+        'category_id',
+        'product_id',
     ];
 
     protected static function boot(): void
@@ -31,14 +33,20 @@ class Product extends Model
         });
     }
 
-    public function brands(): BelongsTo
+    public function brand(): BelongsTo
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsTo(
+            Brand::class,
+            'brand_id',
+            'id'
+        );
     }
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(
+            Category::class,
+        );
     }
 
     public function producer(): BelongsTo

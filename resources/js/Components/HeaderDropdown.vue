@@ -40,7 +40,7 @@ export default {
                 </li>
                 <li>
                     <router-link
-                        to="edit-profile.html"
+                        :to="{ name: 'edit.profile' }"
                         class="text-xs font-medium text-body hover:text-white"
                         >Редактировать профиль</router-link
                     >

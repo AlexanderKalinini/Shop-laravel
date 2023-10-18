@@ -158,7 +158,7 @@ export default {
                         </transition>
                     </div>
                     <router-link
-                        to="cart.html"
+                        :to="{ name: 'cart' }"
                         class="flex items-center gap-3 text-pink hover:text-white"
                     >
                         <svg

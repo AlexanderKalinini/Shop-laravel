@@ -1,4 +1,10 @@
+import ProductsInline from "../Components/ProductsInline.vue";
+import ProductsTile from "../Components/ProductsTile.vue";
 import NotFound from "../Pages/404.vue";
+import CartPage from "../Pages/CartPage.vue";
+import CatalogPage from "../Pages/CatalogPage.vue";
+import CheckoutPage from "../Pages/CheckoutPage.vue";
+import EditProfile from "../Pages/EditProfilePage.vue";
 import HomePage from "../Pages/HomePage.vue";
 import LoginOnMailPage from "../Pages/LoginOnMailPage.vue";
 import LoginPage from "../Pages/LoginPage.vue";
@@ -11,27 +17,33 @@ const routes = [
     {
         path: "/",
         component: HomePage,
+        name: "home",
     },
 
     {
         path: "/login",
         component: LoginPage,
+        name: "login",
     },
     {
         path: "/login-mail",
         component: LoginOnMailPage,
+        name: "login.mail",
     },
     {
         path: "/sign-up",
         component: SignUpPage,
+        name: "signup",
     },
     {
         path: "/sign-up-mail",
         component: SignUpMailPage,
+        name: "signup.mail",
     },
     {
         path: "/lost-password",
         component: LostPasswordPage,
+        name: "lost.password",
     },
     {
         path: "/reset-password",
@@ -43,8 +55,45 @@ const routes = [
         name: "password.reset",
     },
     {
+        path: "/cart",
+        component: CartPage,
+        name: "cart",
+    },
+    {
+        path: "/catalog",
+        component: CatalogPage,
+        children: [
+            {
+                path: "",
+                components: {
+                    tile: ProductsTile,
+                },
+                name: "catalog.tile",
+            },
+            {
+                path: "list",
+                components: {
+                    inline: ProductsInline,
+                },
+                name: "catalog.list",
+            },
+        ],
+        name: "catalog",
+    },
+    {
+        path: "/checkout",
+        component: CheckoutPage,
+        name: "checkout",
+    },
+    {
+        path: "/edit-profile",
+        component: EditProfile,
+        name: "edit.profile",
+    },
+    {
         path: "/:pathMatch(.*)*",
         component: NotFound,
+        name: "notfound",
     },
 ];
 

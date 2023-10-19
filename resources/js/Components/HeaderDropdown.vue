@@ -21,7 +21,7 @@ export default {
         <h5 class="text-xs text-body">Мой профиль</h5>
         <div class="mt-3 flex items-center">
             <img
-                src="images/avatar.jpg"
+                src="/images/avatar.jpg"
                 class="h-11 w-11 rounded-full"
                 alt="Александр Калинин"
             />
@@ -33,7 +33,7 @@ export default {
             <ul class="space-y-2">
                 <li>
                     <router-link
-                        to="orders.html"
+                        :to="{ name: 'orders' }"
                         class="text-xs font-medium text-body hover:text-white"
                         >Мои заказы</router-link
                     >

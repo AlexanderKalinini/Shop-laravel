@@ -1,5 +1,6 @@
 <script>
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
+
 export default {
     components: {
         LayoutComponent,
@@ -240,7 +241,7 @@ export default {
                                                 <router-link
                                                     :to="{
                                                         name: 'product',
-                                                        params: {},
+                                                        params: { id: 1 },
                                                     }"
                                                     class="inline-block text-white hover:text-pink break-words pr-3"
                                                     >SteelSeries Aerox 3

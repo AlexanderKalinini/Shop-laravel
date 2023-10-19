@@ -3,11 +3,15 @@ import Category from "../Components/Category.vue";
 import Pagination from "../Components/Pagination.vue";
 
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
+import router from "../router/router";
 export default {
     components: {
         LayoutComponent,
         Pagination,
         Category,
+    },
+    created() {
+        router.push({ name: "catalog.tile" });
     },
 };
 </script>

@@ -146,7 +146,7 @@ export default {
                         class="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 2xl:grid-cols-6"
                     >
                         <router-link
-                            to="catalog.html"
+                            :to="{ name: 'catalog' }"
                             class="rounded-xl bg-card p-6 hover:bg-card/60"
                         >
                             <div class="h-12 md:h-16">
@@ -163,7 +163,7 @@ export default {
                             </div>
                         </router-link>
                         <router-link
-                            to="catalog.html"
+                            :to="{ name: 'catalog' }"
                             class="rounded-xl bg-card p-6 hover:bg-card/60"
                         >
                             <div class="h-12 md:h-16">
@@ -180,7 +180,7 @@ export default {
                             </div>
                         </router-link>
                         <router-link
-                            to="catalog.html"
+                            :to="{ name: 'catalog' }"
                             class="rounded-xl bg-card p-6 hover:bg-card/60"
                         >
                             <div class="h-12 md:h-16">
@@ -197,7 +197,7 @@ export default {
                             </div>
                         </router-link>
                         <router-link
-                            to="catalog.html"
+                            :to="{ name: 'catalog' }"
                             class="rounded-xl bg-card p-6 hover:bg-card/60"
                         >
                             <div class="h-12 md:h-16">
@@ -214,7 +214,7 @@ export default {
                             </div>
                         </router-link>
                         <router-link
-                            to="catalog.html"
+                            :to="{ name: 'catalog' }"
                             class="rounded-xl bg-card p-6 hover:bg-card/60"
                         >
                             <div class="h-12 md:h-16">
@@ -231,7 +231,7 @@ export default {
                             </div>
                         </router-link>
                         <router-link
-                            to="catalog.html"
+                            :to="{ name: 'catalog' }"
                             class="rounded-xl bg-card p-6 hover:bg-card/60"
                         >
                             <div class="h-12 md:h-16">

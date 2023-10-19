@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthGitHubController;
-use App\Http\Controllers\GetController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,14 +24,18 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get(
         '/getUser',
-        GetController::class
+        UserController::class
     );
 });
 
-Route::post("/sign-up-mail", [AuthController::class, "signUp"])->name("signUp");
+Route::group(['middleware' => 'guest'], function () {
+});
+Route::get("/category-show", [CategoryController::class, 'show'])->name('category.show');
+Route::post("/sign-up-mail", [AuthController::class, "signUp"])->name("signuup");
 Route::post("/login", [AuthController::class, "login"])->name("login");
 Route::post("/send-pass", [AuthController::class, "sendPass"])->name("send.pass");
 Route::post("/reset-password", [AuthController::class, "resetPass"])->name("reset.pass");
@@ -45,5 +51,6 @@ Route::group(
         Route::get('/auth/github/callback', [AuthGitHubController::class, 'callback'])->name('github.callback');
     }
 );
-Route::get('/qwer', function (string $token) {
+
+Route::get('/qwer', function () {
 })->name('password.reset');

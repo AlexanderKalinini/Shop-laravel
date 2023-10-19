@@ -19,6 +19,7 @@ export const store = createStore({
                         Accept: "application/json",
                     },
                 });
+
                 commit("getUser", res.data);
             } catch (err) {
                 console.log(err.message);

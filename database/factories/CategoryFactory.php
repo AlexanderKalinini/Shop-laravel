@@ -18,7 +18,7 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            "title" => Str::ucfirst($this->faker->word(2, true)),
+            "title" => Str::ucfirst($this->faker->word(1, true)),
             "slug" => Str::slug($this->faker->word()),
         ];
     }

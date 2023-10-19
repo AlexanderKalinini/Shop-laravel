@@ -20,7 +20,7 @@ export default {
                 <div class="shrink-0 grow">
                     <router-link to="index.html" rel="home">
                         <img
-                            src="images/logo-dark.svg"
+                            src="/images/logo-dark.svg"
                             class="w-[148px] md:w-[201px] h-[36px] md:h-[50px]"
                             alt="CutCode"
                         />
@@ -58,7 +58,7 @@ export default {
 			</router-link> -->
                 <div class="flex items-center">
                     <img
-                        src="images/avatar.jpg"
+                        src="/images/avatar.jpg"
                         class="w-14 h-14 rounded-full"
                         alt="Александр Калинин"
                     />
@@ -89,22 +89,22 @@ export default {
                 </div>
                 <nav class="flex flex-col mt-8">
                     <router-link
-                        to="/"
+                        :to="{ name: 'home' }"
                         class="self-start py-1 text-dark hover:text-pink text-md font-bold"
                         >Главная</router-link
                     >
                     <router-link
-                        to="#"
+                        :to="{ name: 'catalog' }"
                         class="self-start py-1 text-dark hover:text-pink text-md font-bold"
                         >Каталог товаров</router-link
                     >
                     <router-link
-                        to="#"
+                        :to="{ name: 'orders' }"
                         class="self-start py-1 text-dark hover:text-pink text-md font-bold"
                         >Мои заказы</router-link
                     >
                     <router-link
-                        to="#"
+                        :to="{ name: 'cart' }"
                         class="self-start py-1 text-dark hover:text-pink text-md font-bold"
                         >Корзина</router-link
                     >
@@ -118,7 +118,7 @@ export default {
                     >
                         <img
                             class="h-5 lg:h-6"
-                            src="images/icons/youtube.svg"
+                            src="/images/icons/youtube.svg"
                             alt="YouTube"
                         />
                         <span class="ml-2 lg:ml-3 text-xxs font-semibold"
@@ -133,7 +133,7 @@ export default {
                     >
                         <img
                             class="h-5 lg:h-6"
-                            src="images/icons/telegram.svg"
+                            src="/images/icons/telegram.svg"
                             alt="Telegram"
                         />
                         <span class="ml-2 lg:ml-3 text-xxs font-semibold"

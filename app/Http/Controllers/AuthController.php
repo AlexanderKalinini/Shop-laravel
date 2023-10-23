@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Models\User;
+use Illuminate\Http\Response;
+
+
+
+
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+
 
 
 
@@ -32,10 +39,11 @@ class AuthController extends Authenticate
         ]);
 
         if ($user) {
-            auth()->login($user);
-        }
+            Auth::login($user);
+            return response($request->user(), Response::HTTP_CREATED);
+        };
 
-        return $user;
+        throw new \Exception('Что то пошло не так, попробуйте еще раз');
     }
 
     public function login(LoginRequest $request)
@@ -44,8 +52,8 @@ class AuthController extends Authenticate
 
 
         if (auth()->attempt($credentials)) {
-
-            return response($credentials);
+            $request->session()->regenerate();
+            return response($request->user(), Response::HTTP_CREATED);
         }
 
         throw new \Exception("Такой пользователь не зарегистрирован");
@@ -53,13 +61,12 @@ class AuthController extends Authenticate
 
     public function logout(Request $request)
     {
-        auth()->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return 'redirect;';
+        return response()->noContent();
     }
 
     public function sendPass(Request $request)

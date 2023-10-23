@@ -1,21 +1,42 @@
 <script>
+import axios from "axios";
+
 export default {
     props: { fotoName: String },
+    data() {
+        return {
+            goods: [],
+        };
+    },
+    created() {
+        this.loadGoods();
+    },
+    methods: {
+        async loadGoods() {
+            await axios.get("/sanctum/csrf-cookie");
+            try {
+                const goods = await axios.get("/api/products-all");
+                this.goods = goods.data;
+            } catch (err) {
+                console.log(err.message);
+            }
+        },
+    },
 };
 </script>
 <template>
     <!-- Product card -->
     <div
         class="product-card flex flex-col rounded-3xl bg-card"
-        v-for="n in 9"
-        :key="n"
+        v-for="(good, index) in goods"
+        :key="index"
     >
         <router-link
             :to="{ name: 'product', params: { id: '1' } }"
             class="product-card-photo overflow-hidden h-[320px] rounded-3xl"
         >
             <img
-                v-bind:src="'/images/products/' + n + '.jpg'"
+                v-bind:src="`/images/products/${++index}.jpg`"
                 class="object-cover w-full h-full"
                 alt="SteelSeries Aerox 3 Snow"
             />
@@ -25,11 +46,11 @@ export default {
                 <router-link
                     to="product.html"
                     class="inline-block text-white hover:text-pink"
-                    >SteelSeries Aerox 3 Snow</router-link
+                    >{{ good.title }}</router-link
                 >
             </h3>
             <div class="mt-auto pt-6">
-                <div class="mb-3 text-sm font-semibold">30 000 ₽</div>
+                <div class="mb-3 text-sm font-semibold">{{ good.price }} ₽</div>
                 <div class="flex flex-wrap items-center gap-4">
                     <router-link
                         to="#"

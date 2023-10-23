@@ -20,6 +20,7 @@ class CategoryFactory extends Factory
         return [
             "title" => Str::ucfirst($this->faker->word(1, true)),
             "slug" => Str::slug($this->faker->word()),
+            "on_homepage" => random_int(1, 10) > 6 ? true : false,
         ];
     }
 }

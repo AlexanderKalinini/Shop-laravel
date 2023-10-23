@@ -1,11 +1,12 @@
 <script>
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
+
 export default {
     components: {
         LayoutComponent,
     },
     methods: {
-        async authWith(driver) {
+        authWith(driver) {
             window.location.href = `http://localhost:8080/api/auth/${driver}/redirect`;
         },
     },

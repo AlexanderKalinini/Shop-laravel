@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
+            $table->boolean('on_homepage')->default(false);
             $table->string('title');
             $table->string('slug');
             $table->timestamps();

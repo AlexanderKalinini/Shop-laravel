@@ -5,7 +5,7 @@ import CartPage from "../Pages/CartPage.vue";
 import CatalogPage from "../Pages/CatalogPage.vue";
 import CheckoutPage from "../Pages/CheckoutPage.vue";
 import EditProfile from "../Pages/EditProfilePage.vue";
-import HomePage from "../Pages/HomePage.vue";
+import HomePage from "../Pages/HomePage/HomePage.vue";
 import LoginOnMailPage from "../Pages/LoginOnMailPage.vue";
 import LoginPage from "../Pages/LoginPage.vue";
 import LostPasswordPage from "../Pages/LostPasswordPage.vue";
@@ -70,7 +70,7 @@ const routes = [
             {
                 path: "",
                 components: {
-                    tile: ProductsTile,
+                    default: ProductsTile,
                 },
                 name: "catalog.tile",
             },

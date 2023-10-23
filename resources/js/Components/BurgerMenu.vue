@@ -3,22 +3,36 @@ import axios from "axios";
 export default {
     props: {
         userName: String,
+        toggleMenu: Function,
     },
-
+    data() {
+        return {
+            routes: {
+                Главная: "home",
+                "Каталог товаров": "catalog",
+                "Мои заказы": "orders",
+                Корзина: "cart",
+            },
+        };
+    },
     methods: {
         async logout() {
-            await axios.post("api/logout");
+            await axios.delete("api/logout");
             this.$store.commit("getUser", null);
         },
     },
 };
 </script>
 <template>
-    <div id="mobileMenu" class="hidden bg-white fixed inset-0 z-[9999]">
+    <div id="mobileMenu" class="bg-white fixed inset-0 z-[9999]">
         <div class="container">
             <div class="mmenu-heading flex items-center pt-6 xl:pt-12">
                 <div class="shrink-0 grow">
-                    <router-link to="index.html" rel="home">
+                    <router-link
+                        :to="{ name: 'home' }"
+                        rel="home"
+                        @click="toggleMenu"
+                    >
                         <img
                             src="/images/logo-dark.svg"
                             class="w-[148px] md:w-[201px] h-[36px] md:h-[50px]"
@@ -29,6 +43,7 @@ export default {
                 <div class="shrink-0 flex items-center">
                     <button
                         id="closeMobileMenu"
+                        @click="toggleMenu"
                         class="text-dark hover:text-purple transition"
                     >
                         <span class="sr-only">Закрыть меню</span>
@@ -89,24 +104,11 @@ export default {
                 </div>
                 <nav class="flex flex-col mt-8">
                     <router-link
-                        :to="{ name: 'home' }"
+                        v-for="(route, key) in routes"
+                        :to="{ name: route }"
+                        @click="toggleMenu"
                         class="self-start py-1 text-dark hover:text-pink text-md font-bold"
-                        >Главная</router-link
-                    >
-                    <router-link
-                        :to="{ name: 'catalog' }"
-                        class="self-start py-1 text-dark hover:text-pink text-md font-bold"
-                        >Каталог товаров</router-link
-                    >
-                    <router-link
-                        :to="{ name: 'orders' }"
-                        class="self-start py-1 text-dark hover:text-pink text-md font-bold"
-                        >Мои заказы</router-link
-                    >
-                    <router-link
-                        :to="{ name: 'cart' }"
-                        class="self-start py-1 text-dark hover:text-pink text-md font-bold"
-                        >Корзина</router-link
+                        >{{ key }}</router-link
                     >
                 </nav>
                 <div class="flex flex-wrap items-center space-x-6 mt-8">

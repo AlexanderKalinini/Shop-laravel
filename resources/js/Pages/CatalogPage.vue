@@ -11,7 +11,7 @@ export default {
         Category,
     },
     created() {
-        router.push({ name: "catalog.tile" });
+        router.push({ name: "catalog.tile", replace: true });
     },
 };
 </script>
@@ -365,7 +365,7 @@ export default {
                                     </form>
                                 </div>
                             </div>
-                            <router-view name="tile" />
+                            <router-view />
                             <router-view name="inline" />
                             <Pagination />
                         </div>

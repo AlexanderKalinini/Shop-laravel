@@ -20,8 +20,8 @@ class BrandFactory extends Factory
         return [
             "title" => ucfirst($this->faker->word()),
             "slug" => Str::slug($this->faker->company()),
+            "on_homepage" => random_int(1, 10) > 6 ? true : false,
             "thumbnail" => $this->faker->url(),
-
         ];
     }
 }

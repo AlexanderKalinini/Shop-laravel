@@ -23,14 +23,13 @@ return new class extends Migration
             $table->foreignIdFor(Producer::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedInteger('price')->default(0);
             $table->unsignedInteger('old_price')->nullable();
-
-
+            $table->unsignedInteger('count_estimates');
             // $table->string('bread_crumbs')->nullable();
             // $table->text('characteristics')->nullable();
             // $table->text('describe')->nullable();
             // $table->text('options')->nullable();
-            // $table->unsignedFloat('rating')->nullable();
-            // $table->unsignedInteger('count_estimates');
+
+            //   $table->unsignedFloat('rating')->nullable();
             // $table->unsignedInteger('estimate')->nullable();
         });
 

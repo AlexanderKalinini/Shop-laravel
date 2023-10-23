@@ -15,17 +15,25 @@ export default {
     data() {
         return {
             dropdownProfile: false,
+            toggleMenu: false,
         };
     },
     methods: {
         toggleDropdown() {
             this.dropdownProfile = !this.dropdownProfile;
         },
+        toggleBurgerMenu() {
+            this.toggleMenu = !this.toggleMenu;
+        },
     },
 };
 </script>
 <template>
-    <BurgerMenu :userName="userName" />
+    <BurgerMenu
+        v-if="toggleMenu"
+        :userName="userName"
+        :toggleMenu="toggleBurgerMenu"
+    />
     <!-- Site header -->
     <header class="header pt-6 xl:pt-12">
         <div class="container">
@@ -89,7 +97,7 @@ export default {
                 <!-- /.header-menu -->
                 <div class="header-actions flex items-center gap-3 md:gap-5">
                     <router-link
-                        to="/login"
+                        :to="{ name: 'login' }"
                         v-if="!userName"
                         class="profile hidden items-center xs:flex"
                     >
@@ -182,6 +190,7 @@ export default {
                         </div>
                     </router-link>
                     <button
+                        @click="toggleBurgerMenu"
                         id="burgerMenu"
                         class="flex text-white transition hover:text-pink 2xl:hidden"
                     >

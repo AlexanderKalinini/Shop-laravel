@@ -4,7 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthGitHubController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
-
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,23 +25,22 @@ use Illuminate\Support\Facades\Route;
 
 
 
-
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get(
-        '/getUser',
-        UserController::class
-    );
+Route::delete('/logout', [AuthController::class, "logout"])->name("logout")->middleware('auth');
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/getUser', UserController::class)->name('get.user');
 });
 
-Route::group(['middleware' => 'guest'], function () {
+Route::middleware(['guest'])->group(function () {
+    Route::post("/sign-up-mail", [AuthController::class, "signUp"])->name("signuup");
+    Route::post("/login", [AuthController::class, "login"])->name("login");
+    Route::post("/send-pass", [AuthController::class, "sendPass"])->name("send.pass");
+    Route::post("/reset-password", [AuthController::class, "resetPass"])->name("reset.pass");
 });
+
+
 Route::get("/category-show", [CategoryController::class, 'show'])->name('category.show');
-Route::post("/sign-up-mail", [AuthController::class, "signUp"])->name("signuup");
-Route::post("/login", [AuthController::class, "login"])->name("login");
-Route::post("/send-pass", [AuthController::class, "sendPass"])->name("send.pass");
-Route::post("/reset-password", [AuthController::class, "resetPass"])->name("reset.pass");
-Route::post("/logout", [AuthController::class, "logout"])->name("logout");
-Route::post("/logout", [AuthController::class, "logout"])->name("logout");
+Route::get("/brand-show", [BrandController::class, 'show'])->name('brand.show');
+Route::get("/products-all", [ProductController::class, 'showAll'])->name('products.all');
 
 
 Route::group(
@@ -52,5 +52,4 @@ Route::group(
     }
 );
 
-Route::get('/qwer', function () {
-})->name('password.reset');
+Route::get('/qwer')->name('password.reset');

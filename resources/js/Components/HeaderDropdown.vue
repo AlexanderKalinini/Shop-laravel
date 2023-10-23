@@ -7,8 +7,13 @@ export default {
     },
     methods: {
         async logout() {
-            await axios.get("/sanctum/csrf-cookie");
-            await axios.post("/api/logout");
+            try {
+                await axios.get("/sanctum/csrf-cookie");
+                await axios.delete("/api/logout");
+            } catch (err) {
+                console.log(err);
+            }
+
             this.$store.commit("getUser", null);
         },
     },

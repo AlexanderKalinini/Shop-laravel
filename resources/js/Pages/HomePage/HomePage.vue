@@ -1,12 +1,14 @@
 <script>
-import Category from "../Components/Category.vue";
-import HomeCatalog from "../Components/HomeCatalog.vue";
-import LayoutComponent from "../Layuot/LayoutComponent.vue";
+import Category from "../../Components/Category.vue";
+import LayoutComponent from "../../Layuot/LayoutComponent.vue";
+import Brands from "./Components/Brands.vue";
+import Goods from "./Components/Goods.vue";
 export default {
     components: {
-        HomeCatalog,
+        Goods,
         LayoutComponent,
         Category,
+        Brands,
     },
 };
 </script>
@@ -125,7 +127,7 @@ export default {
                     <div
                         class="products mt-8 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-10 2xl:grid-cols-4 2xl:gap-y-12"
                     >
-                        <HomeCatalog />
+                        <Goods />
                     </div>
 
                     <div class="mt-12 text-center">
@@ -140,114 +142,8 @@ export default {
                 <section class="mt-20">
                     <!-- Section heading -->
                     <h2 class="text-lg font-black lg:text-[42px]">Бренды</h2>
-
+                    <Brands />
                     <!-- Brands list -->
-                    <div
-                        class="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 2xl:grid-cols-6"
-                    >
-                        <router-link
-                            :to="{ name: 'catalog' }"
-                            class="rounded-xl bg-card p-6 hover:bg-card/60"
-                        >
-                            <div class="h-12 md:h-16">
-                                <img
-                                    src="images/brands/1.png"
-                                    class="h-full w-full object-contain"
-                                    alt="Steelseries"
-                                />
-                            </div>
-                            <div
-                                class="mt-8 text-center text-xs font-semibold sm:text-sm lg:text-md"
-                            >
-                                Steelseries
-                            </div>
-                        </router-link>
-                        <router-link
-                            :to="{ name: 'catalog' }"
-                            class="rounded-xl bg-card p-6 hover:bg-card/60"
-                        >
-                            <div class="h-12 md:h-16">
-                                <img
-                                    src="images/brands/2.png"
-                                    class="h-full w-full object-contain"
-                                    alt="Razer"
-                                />
-                            </div>
-                            <div
-                                class="mt-8 text-center text-xs font-semibold sm:text-sm lg:text-md"
-                            >
-                                Razer
-                            </div>
-                        </router-link>
-                        <router-link
-                            :to="{ name: 'catalog' }"
-                            class="rounded-xl bg-card p-6 hover:bg-card/60"
-                        >
-                            <div class="h-12 md:h-16">
-                                <img
-                                    src="images/brands/3.png"
-                                    class="h-full w-full object-contain"
-                                    alt="Logitech"
-                                />
-                            </div>
-                            <div
-                                class="mt-8 text-center text-xs font-semibold sm:text-sm lg:text-md"
-                            >
-                                Logitech
-                            </div>
-                        </router-link>
-                        <router-link
-                            :to="{ name: 'catalog' }"
-                            class="rounded-xl bg-card p-6 hover:bg-card/60"
-                        >
-                            <div class="h-12 md:h-16">
-                                <img
-                                    src="images/brands/4.png"
-                                    class="h-full w-full object-contain"
-                                    alt="HyperX"
-                                />
-                            </div>
-                            <div
-                                class="mt-8 text-center text-xs font-semibold sm:text-sm lg:text-md"
-                            >
-                                HyperX
-                            </div>
-                        </router-link>
-                        <router-link
-                            :to="{ name: 'catalog' }"
-                            class="rounded-xl bg-card p-6 hover:bg-card/60"
-                        >
-                            <div class="h-12 md:h-16">
-                                <img
-                                    src="images/brands/5.png"
-                                    class="h-full w-full object-contain"
-                                    alt="Playstation"
-                                />
-                            </div>
-                            <div
-                                class="mt-8 text-center text-xs font-semibold sm:text-sm lg:text-md"
-                            >
-                                Playstation
-                            </div>
-                        </router-link>
-                        <router-link
-                            :to="{ name: 'catalog' }"
-                            class="rounded-xl bg-card p-6 hover:bg-card/60"
-                        >
-                            <div class="h-12 md:h-16">
-                                <img
-                                    src="images/brands/6.png"
-                                    class="h-full w-full object-contain"
-                                    alt="XBOX"
-                                />
-                            </div>
-                            <div
-                                class="mt-8 text-center text-xs font-semibold sm:text-sm lg:text-md"
-                            >
-                                XBOX
-                            </div>
-                        </router-link>
-                    </div>
                 </section>
             </div>
         </main>

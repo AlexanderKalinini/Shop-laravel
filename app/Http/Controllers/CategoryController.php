@@ -17,8 +17,8 @@ class CategoryController extends Controller
             return Cache::get('categories');
         }
 
-        $categories = Category::all();
-        Cache::put('categories', $categories, 600);
+        $categories = Category::where("on_homepage", true)->limit(9)->get();
+        Cache::put('categories', $categories, 1);
         return $categories;
     }
 }

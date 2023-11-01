@@ -7,6 +7,7 @@ import Filters from "./Components/Filters.vue";
 import Breadcrumps from "../../Components/Breadcrumps.vue";
 import ProductsInline from "./Components/ProductsInline.vue";
 import ProductsTile from "./Components/ProductsTile.vue";
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -20,16 +21,8 @@ export default {
   },
 
   mounted() {
-    console.log(this.$store.state.filters);
     this.loadCategory();
     this.fetchProducts(null, this.$store.state.filters);
-  },
-
-  watch: {
-    select(newSel, oldSel) {
-      this.$store.commit("setFilter", { select: newSel });
-      this.fetchProducts(null, this.$store.state.filters);
-    },
   },
 
   data() {
@@ -46,7 +39,22 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState({
+      search: (state) => state.filters.title,
+    }),
+  },
 
+  watch: {
+    select(newSel, oldSel) {
+      this.$store.commit("setFilter", { select: newSel });
+      this.fetchProducts(null, this.$store.state.filters);
+    },
+
+    search(newValue, oldValue) {
+      this.fetchProducts(null, { title: newValue });
+    },
+  },
   methods: {
     async loadCategory() {
       try {
@@ -64,6 +72,7 @@ export default {
         select = "default",
         maxPrice = null,
         minPrice = null,
+        title = null,
       } = filters;
       await axios.get("/sanctum/csrf-cookie");
       const res = await axios.post("/api/products", {
@@ -73,6 +82,7 @@ export default {
         categoryId: categoryId,
         minPrice: minPrice,
         maxPrice: maxPrice,
+        title: title,
       });
       this.total = res.data.total;
       this.products = res.data.data;

@@ -375,7 +375,7 @@ export default {
                             class="flex flex-col sm:flex-row lg:justify-end gap-4"
                         >
                             <router-link
-                                :to="{ name: 'catalog.tile' }"
+                                :to="{ name: 'catalog' }"
                                 class="btn btn-pink"
                             >
                                 За покупками</router-link

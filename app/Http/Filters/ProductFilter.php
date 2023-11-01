@@ -16,6 +16,7 @@ class ProductFilter extends AbstractFilter
     public const MIN_PRICE = 'minPrice';
     public const MAX_PRICE = 'maxPrice';
     public const SORT = 'sort';
+    public const TITLE = 'title';
 
 
 
@@ -31,6 +32,7 @@ class ProductFilter extends AbstractFilter
             static::MIN_PRICE => [$this, 'minPrice'],
             static::MAX_PRICE => [$this, 'maxPrice'],
             static::SORT => [$this, 'sort'],
+            static::TITLE => [$this, 'title'],
 
         ];
     }
@@ -53,6 +55,11 @@ class ProductFilter extends AbstractFilter
         if ($value === 'expensive') {
             $builder->orderBy('price', 'desc');
         }
+    }
+
+    public function title(Builder $builder, string $value): void
+    {
+        $builder->where('title', 'like', "%$value%");
     }
 
     public function minPrice(Builder $builder,  $minPrice): void

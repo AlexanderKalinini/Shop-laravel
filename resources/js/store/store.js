@@ -5,11 +5,14 @@ export const store = createStore({
     state() {
         return {
             user: null,
+            filters: {},
         };
     },
 
     mutations: {
         getUser: (state, user) => (state.user = user),
+        setFilter: (state, payload) =>
+            (state.filters = { ...state.filters, ...payload }),
     },
     actions: {
         async fetchUser({ commit, state }) {

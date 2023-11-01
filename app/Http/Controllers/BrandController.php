@@ -19,4 +19,15 @@ class BrandController
         Cache::put("brands", $brands, 60);
         return $brands;
     }
+
+    //     public function showAll()
+    //     {
+    //         if (Cache::has("brands")) {
+    //             return Cache::get("brands");
+    //         }
+    //
+    //         $brands = Brand::where('on_homepage', true)->limit(6)->get();
+    //         Cache::put("brands", $brands, 60);
+    //         return $brands;
+    //     }
 }

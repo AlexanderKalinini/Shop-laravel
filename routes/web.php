@@ -20,6 +20,7 @@ use App\Http\Controllers\Controller;
 |
 */
 
+
 Route::get('/{page}', Controller::class)->where('page', '.*');
 
 // Route::middleware('guest')->group(function () {

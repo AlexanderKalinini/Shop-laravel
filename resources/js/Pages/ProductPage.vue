@@ -1,5 +1,5 @@
 <script>
-import ProductsTile from "../Components/ProductsTile.vue";
+import ProductsTile from "../Pages/CatalogPage/Components/ProductsInline.vue";
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
 
 export default {

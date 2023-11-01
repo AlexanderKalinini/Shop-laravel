@@ -5,7 +5,10 @@ use App\Http\Controllers\AuthGitHubController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\FilterConroller;
 use App\Http\Controllers\ProductController;
+
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,11 +40,12 @@ Route::middleware(['guest'])->group(function () {
     Route::post("/reset-password", [AuthController::class, "resetPass"])->name("reset.pass");
 });
 
-
+Route::get("/filters", [FilterConroller::class, "index"])->name("filters");
 Route::get("/category-show", [CategoryController::class, 'show'])->name('category.show');
 Route::get("/brand-show", [BrandController::class, 'show'])->name('brand.show');
-Route::get("/products-all", [ProductController::class, 'showAll'])->name('products.all');
-
+Route::get('/max-price', [ProductController::class, 'maxPrice']);
+Route::post('/products', [ProductController::class, 'showPaginate'])->name('products.paginate');
+Route::apiResource('product', ProductController::class);
 
 Route::group(
     ['middleware' => 'web'],

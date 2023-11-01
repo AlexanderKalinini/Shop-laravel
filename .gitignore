@@ -5,6 +5,7 @@
 /public/hot
 /public/storage
 /storage/*.key
+/storage
 /vendor
 .env
 .env.backup
@@ -12,6 +13,7 @@
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
+TZ.pdf
 auth.json
 npm-debug.log
 yarn-error.log

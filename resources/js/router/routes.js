@@ -1,8 +1,6 @@
-import ProductsInline from "../Components/ProductsInline.vue";
-import ProductsTile from "../Components/ProductsTile.vue";
 import NotFound from "../Pages/404.vue";
 import CartPage from "../Pages/CartPage.vue";
-import CatalogPage from "../Pages/CatalogPage.vue";
+import CatalogPage from "../Pages/CatalogPage/CatalogPage.vue";
 import CheckoutPage from "../Pages/CheckoutPage.vue";
 import EditProfile from "../Pages/EditProfilePage.vue";
 import HomePage from "../Pages/HomePage/HomePage.vue";
@@ -66,22 +64,6 @@ const routes = [
     {
         path: "/catalog",
         component: CatalogPage,
-        children: [
-            {
-                path: "",
-                components: {
-                    default: ProductsTile,
-                },
-                name: "catalog.tile",
-            },
-            {
-                path: "",
-                components: {
-                    inline: ProductsInline,
-                },
-                name: "catalog.list",
-            },
-        ],
         name: "catalog",
     },
     {

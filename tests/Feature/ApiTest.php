@@ -33,7 +33,14 @@ class ApiTest extends TestCase
     {
         $response = $this->get('/api/category-show');
         $response->assertStatus(200);
-        $response->assertJsonCount(10);
+        $response->assertJsonCount(9);
         $response->assertJsonStructure([['id', 'title', 'slug']]);
+    }
+    public function test_get_brands(): void
+    {
+        $response = $this->get('/api/brand-show');
+        $response->assertStatus(200);
+        $response->assertJsonCount(6);
+        $response->assertJsonStructure([['id', 'thumbnail', 'title', 'slug', 'on_homepage']]);
     }
 }

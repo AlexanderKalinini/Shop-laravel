@@ -18,3 +18,5 @@ indent_size = 2
 indent_size = 4
 [*.sass]
 indent_style = tab
+[*.vue]
+indent_size = 2

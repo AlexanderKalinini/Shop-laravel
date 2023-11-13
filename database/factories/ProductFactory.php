@@ -34,7 +34,6 @@ class ProductFactory extends Factory
             // "rating" => $this->faker->randomFloat(1, 1, 5),
             // "estimate" => $this->faker->numberBetween(1, 10),
 
-
         ];
     }
 }

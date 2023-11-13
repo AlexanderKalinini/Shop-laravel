@@ -9,7 +9,6 @@ export default {
     HeaderDropdown,
     BurgerMenu,
   },
-
   computed: {
     userName() {
       return this.$store?.state?.user?.name;
@@ -126,13 +125,19 @@ export default {
           </form>
 
           <nav class="gap-8 hidden 2xl:flex">
-            <router-link to="/" class="font-bold text-white hover:text-pink"
+            <router-link
+              :to="{ name: 'home' }"
+              class="font-bold text-white hover:text-pink"
               >Главная</router-link
             >
-            <router-link to="#" class="font-bold text-white hover:text-pink"
+            <router-link
+              :to="{ name: 'catalog' }"
+              class="font-bold text-white hover:text-pink"
               >Каталог товаров</router-link
             >
-            <router-link to="#" class="font-bold text-white hover:text-pink"
+            <router-link
+              :to="{ name: 'cart' }"
+              class="font-bold text-white hover:text-pink"
               >Корзина</router-link
             >
           </nav>

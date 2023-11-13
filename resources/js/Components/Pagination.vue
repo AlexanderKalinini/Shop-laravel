@@ -1,10 +1,12 @@
 <script>
-// TODO убрать пагинацию если ничего не найдено
 export default {
-  emits: ["fetchProducts"],
   props: {
     links: Array,
-    fetchProducts: Function,
+  },
+  methods: {
+    setPage(page) {
+      this.$store.commit("setFilter", { page: page });
+    },
   },
 };
 </script>
@@ -21,7 +23,7 @@ export default {
           v-if="
             links.length > 3 && (Number(link.label) || link.label === '...')
           "
-          @click="$emit('fetchProducts', link.label, this.$store.state.filters)"
+          @click="setPage(link.label)"
         >
           {{ link.label }}
         </button>

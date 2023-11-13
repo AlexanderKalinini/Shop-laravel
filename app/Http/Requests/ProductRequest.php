@@ -29,6 +29,7 @@ class ProductRequest extends FormRequest
             "maxPrice" => "",
             "minPrice" => "",
             "title" => "",
+
         ];
     }
 }

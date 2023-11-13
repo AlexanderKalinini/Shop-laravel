@@ -6,7 +6,7 @@ use App\Http\Filters\ProductFilter;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
-use Illuminate\Database\Eloquent\Builder;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
@@ -35,17 +35,7 @@ class ProductController extends Controller
 
         $filteredProducts = Product::filter($objFilter);
 
-        // if ($data["sort"] === 'title') {
-        //     return $filteredProducts->orderBy('title')->paginate($perPage, ['*'], 'page', $page);
-        // }
-        // if ($data["sort"] === 'cheap') {
-        //     return $filteredProducts->orderBy('price',)->paginate($perPage, ['*'], 'page', $data['page']);
-        // }
-        // if ($data["sort"] === 'expensive') {
-        //     return $filteredProducts->orderBy('price', 'desc')->paginate($perPage, ['*'], 'page', $data['page']);
-        // }
-
-        return $filteredProducts->paginate($perPage, ['*'], 'page', $data['page']);
+        return $filteredProducts->paginate($perPage, ['*'], 'page', $page);
     }
 
     /**
@@ -53,23 +43,38 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        //
+
+        $product = Product::where('slug', $slug)
+            ->with('properties')
+            ->with('optionValues')
+            ->with('descriptions')
+            ->first();
+
+        return new ProductResource($product);
+    }
+
+    public function showByIds(Request $request)
+    {
+        $data = $request->validate([
+            'productsId' => ['']
+        ]);
+
+        return Product::whereIn('id', $data['productsId'])->limit(25)->get();
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $product = Product::fi($request->id);
     }
 
     /**

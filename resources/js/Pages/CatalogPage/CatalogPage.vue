@@ -8,6 +8,7 @@ import Breadcrumps from "../../Components/Breadcrumps.vue";
 import ProductsInline from "./Components/ProductsInline.vue";
 import ProductsTile from "./Components/ProductsTile.vue";
 import { mapState } from "vuex";
+import { fetchProducts } from "../../Api/ProductApi";
 
 export default {
   components: {
@@ -20,73 +21,42 @@ export default {
     ProductsTile,
   },
 
-  mounted() {
-    this.loadCategory();
-    this.fetchProducts(null, this.$store.state.filters);
+  async created() {
+    this.productsData = await fetchProducts(this.$store.state.filters);
   },
 
   data() {
     return {
-      products: null,
-      links: null,
-      total: null,
+      productsData: {},
       select: "default",
-      categories: [],
-      compName: "ProductsTile",
-      crumbs: [
-        { title: "Главная", routeName: "home" },
-        { title: "Каталог", routeName: "catalog" },
-      ],
+      componentName: "ProductsTile",
     };
   },
   computed: {
     ...mapState({
-      search: (state) => state.filters.title,
+      filters: (state) => state.filters,
     }),
+
+    crumbs() {
+      return [
+        { title: "Главная", routeName: "home" },
+        { title: "Каталог", routeName: "catalog" },
+        { title: this.filters?.category?.title, routeName: null },
+      ];
+    },
   },
 
   watch: {
-    select(newSel, oldSel) {
-      this.$store.commit("setFilter", { select: newSel });
-      this.fetchProducts(null, this.$store.state.filters);
+    async select(newSel, oldSel) {
+      this.$store.commit("setFilter", { select: newSel, page: null });
+      await fetchProducts(this.$store.state.filters);
     },
 
-    search(newValue, oldValue) {
-      this.fetchProducts(null, { title: newValue });
-    },
-  },
-  methods: {
-    async loadCategory() {
-      try {
-        const res = await axios.get("/api/filters");
-        this.categories = res.data.categories;
-      } catch (err) {
-        console.log(err.message);
-      }
-    },
-
-    async fetchProducts(page = null, filters = {}) {
-      const {
-        brandsId = null,
-        categoryId = null,
-        select = "default",
-        maxPrice = null,
-        minPrice = null,
-        title = null,
-      } = filters;
-      await axios.get("/sanctum/csrf-cookie");
-      const res = await axios.post("/api/products", {
-        page: page,
-        sort: select,
-        brandsId: brandsId,
-        categoryId: categoryId,
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-        title: title,
-      });
-      this.total = res.data.total;
-      this.products = res.data.data;
-      this.links = res.data.links;
+    filters: {
+      async handler(newFilter) {
+        this.productsData = await fetchProducts(newFilter);
+      },
+      deep: true,
     },
   },
 };
@@ -97,14 +67,14 @@ export default {
       <div class="container">
         <!-- Breadcrumbs -->
         <Breadcrumps :crumbs="crumbs" />
-        <Category :categories="categories" @fetch-products="fetchProducts" />
 
+        <Category />
         <section class="mt-16 lg:mt-24">
           <!-- Section heading -->
           <h2 class="text-lg lg:text-[42px] font-black">Каталог товаров</h2>
 
           <div class="flex flex-col lg:flex-row gap-12 lg:gap-6 2xl:gap-8 mt-8">
-            <Filters @fetch-products="fetchProducts" />
+            <Filters />
 
             <div class="basis-auto xl:basis-3/4">
               <!-- Sort by -->
@@ -114,8 +84,8 @@ export default {
                 <div class="flex items-center gap-4">
                   <div class="flex items-center gap-2">
                     <button
-                      @click="compName = 'ProductsTile'"
-                      :class="{ 'bg-pink': compName === 'ProductsTile' }"
+                      @click="componentName = 'ProductsTile'"
+                      :class="{ 'bg-pink': componentName === 'ProductsTile' }"
                       class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-card text-white hover:text-pink"
                     >
                       <svg
@@ -132,8 +102,8 @@ export default {
                       </svg>
                     </button>
                     <button
-                      @click="compName = 'ProductsInline'"
-                      :class="{ 'bg-pink': compName === 'ProductsInline' }"
+                      @click="componentName = 'ProductsInline'"
+                      :class="{ 'bg-pink': componentName === 'ProductsInline' }"
                       class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-card text-white hover:text-pink"
                     >
                       <svg
@@ -151,7 +121,7 @@ export default {
                     </button>
                   </div>
                   <div class="text-body text-xxs sm:text-xs">
-                    Найдено: {{ total }}
+                    Найдено: {{ productsData?.total }}
                   </div>
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -179,8 +149,11 @@ export default {
                   </form>
                 </div>
               </div>
-              <component :is="compName" :products="products"></component>
-              <Pagination :links="links" @fetch-products="fetchProducts" />
+              <component
+                :is="componentName"
+                :products="productsData?.data"
+              ></component>
+              <Pagination :links="productsData?.links" />
             </div>
           </div>
         </section>

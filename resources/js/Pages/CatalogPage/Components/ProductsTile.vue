@@ -16,7 +16,10 @@ export default {
       class="product-card flex flex-col rounded-3xl bg-card"
     >
       <router-link
-        :to="{ name: 'product', params: { id: product.id } }"
+        :to="{
+          name: 'product',
+          params: { slug: product?.slug },
+        }"
         class="product-card-photo overflow-hidden h-[320px] rounded-3xl"
       >
         <img
@@ -28,7 +31,10 @@ export default {
       <div class="grow flex flex-col py-8 px-6">
         <h3 class="text-sm lg:text-md font-black">
           <router-link
-            :to="{ name: 'product', params: { id: product.id } }"
+            :to="{
+              name: 'product',
+              params: { slug: product?.slug },
+            }"
             class="inline-block text-white hover:text-pink"
             >{{ product.title }}</router-link
           >

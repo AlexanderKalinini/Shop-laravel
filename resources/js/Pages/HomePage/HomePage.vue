@@ -3,31 +3,13 @@ import Category from "../../Components/Category.vue";
 import LayoutComponent from "../../Layuot/LayoutComponent.vue";
 import Brands from "./Components/Brands.vue";
 import Goods from "./Components/Goods.vue";
-import axios from "axios";
+
 export default {
   components: {
     Goods,
     LayoutComponent,
     Category,
     Brands,
-  },
-  created() {
-    this.loadCategory();
-  },
-  data() {
-    return {
-      categories: [],
-    };
-  },
-  methods: {
-    async loadCategory() {
-      try {
-        const res = await axios.get("/api/category-show");
-        this.categories = res.data;
-      } catch (err) {
-        console.log(err.message);
-      }
-    },
   },
 };
 </script>
@@ -121,7 +103,7 @@ export default {
             </div>
           </div>
         </section>
-        <Category :categories="categories" />
+        <Category :home="true" />
         <section class="mt-16 lg:mt-24">
           <!-- Section heading -->
           <h2 class="text-lg font-black lg:text-[42px]">Каталог товаров</h2>

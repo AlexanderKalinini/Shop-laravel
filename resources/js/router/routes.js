@@ -10,7 +10,7 @@ import LostPasswordPage from "../Pages/LostPasswordPage.vue";
 import OrderSuccessPage from "../Pages/OrderSuccessPage.vue";
 import OrdersItemPage from "../Pages/OrdersItemPage.vue";
 import OrderPage from "../Pages/OrdersPage.vue";
-import Product from "../Pages/ProductPage.vue";
+import Product from "../Pages/ProductPage/ProductPage.vue";
 import ResetPasswordPage from "../Pages/ResetPasswordPage.vue";
 import SearchPage from "../Pages/SearchPage.vue";
 import SignUpPage from "../Pages/SignUpPage.vue";
@@ -82,9 +82,10 @@ const routes = [
         name: "orders",
     },
     {
-        path: "/product/:id",
+        path: "/product/:slug",
         component: Product,
         name: "product",
+        props: true,
     },
     {
         path: "/orders-item/:id",

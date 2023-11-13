@@ -31,7 +31,7 @@ export default {
     :key="index"
   >
     <router-link
-      :to="{ name: 'product', params: { id: product.id } }"
+      :to="{ name: 'product', params: { slug: product.slug } }"
       class="product-card-photo overflow-hidden h-[320px] rounded-3xl"
     >
       <img

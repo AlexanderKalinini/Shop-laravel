@@ -2,8 +2,6 @@
 import axios from "axios";
 
 export default {
-  emits: ["fetchProducts"],
-
   created() {
     this.getFilters();
   },
@@ -27,13 +25,12 @@ export default {
   watch: {
     filters: {
       handler(newFilter) {
-        console.log("filter", newFilter);
         this.$store.commit("setFilter", {
           brandsId: newFilter.checkedBrands,
           maxPrice: newFilter.maxPrice,
           minPrice: newFilter.minPrice,
+          page: null,
         });
-        this.$emit("fetchProducts", null, this.$store.state.filters);
       },
       deep: true,
     },
@@ -45,11 +42,14 @@ export default {
       this.maxPrice = res.data.maxPrice;
       this.minPrice = res.data.minPrice;
     },
+
     resetFilters() {
       this.filters = {
         checkedBrands: [],
         checkedColors: [],
         withLight: false,
+        minPrice: this.minPrice,
+        maxPrice: this.maxPrice,
       };
     },
   },

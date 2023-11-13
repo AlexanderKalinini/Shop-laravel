@@ -45,6 +45,7 @@ Route::get("/category-show", [CategoryController::class, 'show'])->name('categor
 Route::get("/brand-show", [BrandController::class, 'show'])->name('brand.show');
 Route::get('/max-price', [ProductController::class, 'maxPrice']);
 Route::post('/products', [ProductController::class, 'showPaginate'])->name('products.paginate');
+Route::post('/products/id', [ProductController::class, 'showByIds'])->name('products.showbyids');
 Route::apiResource('product', ProductController::class);
 
 Route::group(

@@ -14,7 +14,6 @@ class FilterConroller extends Controller
         $brands = Brand::orderBy("title")->get();
         $categories = Category::orderBy("title")->get();
 
-
         $maxPrice = Product::max("price");
         $minPrice = Product::min("price");
 

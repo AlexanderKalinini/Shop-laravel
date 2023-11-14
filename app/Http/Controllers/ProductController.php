@@ -33,7 +33,7 @@ class ProductController extends Controller
             ['queryParams' => array_filter($data)]
         );
 
-        $filteredProducts = Product::filter($objFilter);
+        $filteredProducts = Product::with('properties')->filter($objFilter);
 
         return $filteredProducts->paginate($perPage, ['*'], 'page', $page);
     }

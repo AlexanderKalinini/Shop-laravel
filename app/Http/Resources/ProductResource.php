@@ -33,7 +33,7 @@ class ProductResource extends JsonResource
                 ->mapToGroups(function (OptionValueResource $item) {
                     return [$item->option->title => $item->value];
                 }),
-            "descriptions" => $this->descriptions
+            "descriptions" => $this->descriptions,
         ];
     }
 }

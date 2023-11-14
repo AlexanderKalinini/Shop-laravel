@@ -20,7 +20,7 @@ export default {
         class="product-card-photo overflow-hidden shrink-0 md:w-[260px] xl:w-[320px] h-[320px] md:h-full rounded-3xl"
       >
         <img
-          src="images/products/2.jpg"
+          :src="product.thumbnail"
           class="object-cover w-full h-full"
           alt="SteelSeries Sensei Ten"
         />
@@ -37,20 +37,11 @@ export default {
           >
         </h3>
         <ul class="space-y-1 mt-4 text-xxs">
-          <li class="flex justify-between text-body">
-            <strong>Вес (г):</strong> 92
-          </li>
-          <li class="flex justify-between text-body">
-            <strong>Тип сенсора:</strong> Оптический
-          </li>
-          <li class="flex justify-between text-body">
-            <strong>DPI мыши:</strong> 18000
-          </li>
-          <li class="flex justify-between text-body">
-            <strong>Количество кнопок мыши:</strong> 8
-          </li>
-          <li class="flex justify-between text-body">
-            <strong>Подсветка:</strong> RGB
+          <li
+            v-for="property in product.properties"
+            class="flex justify-between text-body"
+          >
+            <strong>{{ property.title }}</strong> {{ property.pivot.value }}
           </li>
         </ul>
         <div

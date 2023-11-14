@@ -83,7 +83,7 @@ export default {
               class="overflow-hidden h-auto max-h-[620px] lg:h-[480px] xl:h-[620px] rounded-3xl"
             >
               <img
-                src="/images/products/1.jpg"
+                :src="product.thumbnail"
                 class="object-cover w-full h-full"
                 alt="SteelSeries Aerox 3 Snow"
               />

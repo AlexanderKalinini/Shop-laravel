@@ -21,7 +21,14 @@ class BrandFactory extends Factory
             "title" => ucfirst($this->faker->word()),
             "slug" => Str::slug($this->faker->company()),
             "on_homepage" => random_int(1, 10) > 6 ? true : false,
-            "thumbnail" => $this->faker->url(),
+            "thumbnail" => '/storage/images/' . $this->faker->image(
+                'storage/app/public/images',
+                65,
+                65,
+                'animals',
+                false
+            )
+
         ];
     }
 }

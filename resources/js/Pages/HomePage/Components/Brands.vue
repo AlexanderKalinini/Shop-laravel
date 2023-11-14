@@ -37,7 +37,7 @@ export default {
     >
       <div class="h-12 md:h-16">
         <img
-          :src="'images/brands/' + ++index + '.png'"
+          :src="brand.thumbnail"
           class="h-full w-full object-contain"
           alt="Steelseries"
         />

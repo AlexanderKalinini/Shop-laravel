@@ -23,6 +23,7 @@ export default {
 
   async created() {
     this.productsData = await fetchProducts(this.$store.state.filters);
+    console.log("prod", this.productsData);
   },
 
   data() {
@@ -121,7 +122,7 @@ export default {
                     </button>
                   </div>
                   <div class="text-body text-xxs sm:text-xs">
-                    Найдено: {{ productsData?.total }}
+                    Найдено: {{ productsData?.meta?.total }}
                   </div>
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -153,7 +154,7 @@ export default {
                 :is="componentName"
                 :products="productsData?.data"
               ></component>
-              <Pagination :links="productsData?.links" />
+              <Pagination :links="productsData?.meta?.links" />
             </div>
           </div>
         </section>

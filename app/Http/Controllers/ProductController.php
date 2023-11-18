@@ -16,7 +16,8 @@ class ProductController extends Controller
 
     public function index()
     {
-        return Product::orderBy('count_estimates', 'desc')->limit(9)->get();
+        $product = Product::orderBy('count_estimates', 'desc')->with('optionValues')->limit(4)->get();
+        return ProductResource::collection($product);
     }
 
 
@@ -33,9 +34,12 @@ class ProductController extends Controller
             ['queryParams' => array_filter($data)]
         );
 
-        $filteredProducts = Product::with('properties')->filter($objFilter);
+        $filteredProducts = Product::with('properties')
+            ->with('optionValues')
+            ->filter($objFilter);
 
-        return $filteredProducts->paginate($perPage, ['*'], 'page', $page);
+        return  ProductResource::collection($filteredProducts
+            ->paginate($perPage, ['*'], 'page', $page));
     }
 
     /**
@@ -74,7 +78,6 @@ class ProductController extends Controller
      */
     public function update(Request $request)
     {
-        $product = Product::fi($request->id);
     }
 
     /**

@@ -4,6 +4,10 @@ import LayoutComponent from "../../Layuot/LayoutComponent.vue";
 import Breadcrumps from "../../Components/Breadcrumps.vue";
 import { getProduct } from "../../Api/ProductApi.js";
 import { getProductByIds } from "../../Api/ProductApi.js";
+import {
+  addProductToCart,
+  sessionEventDispatchCart,
+} from "../../../helpers/Cart.js";
 
 export default {
   components: {
@@ -18,15 +22,22 @@ export default {
 
   async created() {
     this.product = await getProduct(this.slug);
+    this.options = Object.fromEntries(
+      Object.entries(this?.product?.options).map((el) => {
+        return [el[0], el[1][0]];
+      })
+    );
     sessionStorage.setItem("also" + this.product.id, this.product.id);
     this.seenProducts = await getProductByIds(this.getIdsFromSession());
   },
 
   data() {
     return {
-      product: {},
+      product: null,
       count: 1,
       seenProducts: [],
+      defaultOptions: {},
+      options: {},
     };
   },
 
@@ -39,6 +50,11 @@ export default {
         }
       }
       return [...ids];
+    },
+
+    callAddToCart() {
+      addProductToCart(this.product, this.count, this.options);
+      sessionEventDispatchCart();
     },
   },
 
@@ -58,7 +74,7 @@ export default {
         { title: "Главная", routeName: "home" },
         { title: "Каталог", routeName: "catalog" },
         {
-          title: this.product.title,
+          title: this.product?.title,
           routeName: null,
         },
       ];
@@ -83,7 +99,7 @@ export default {
               class="overflow-hidden h-auto max-h-[620px] lg:h-[480px] xl:h-[620px] rounded-3xl"
             >
               <img
-                :src="product.thumbnail"
+                :src="product?.thumbnail"
                 class="object-cover w-full h-full"
                 alt="SteelSeries Aerox 3 Snow"
               />
@@ -93,7 +109,7 @@ export default {
           <div class="basis-full lg:basis-3/5 xl:basis-2/4">
             <div class="grow flex flex-col lg:py-8">
               <h1 class="text-lg md:text-xl xl:text-[42px] font-black">
-                {{ product.title }}
+                {{ product?.title }}
               </h1>
               <ul class="flex items-center gap-2 mt-4">
                 <li class="text-[#FFC107]">
@@ -159,21 +175,21 @@ export default {
               </ul>
               <div class="flex items-baseline gap-4 mt-4">
                 <div class="text-pink text-lg md:text-xl font-black">
-                  {{ product.price }} ₽
+                  {{ product?.price }} ₽
                 </div>
                 <div
                   class="text-body text-md md:text-lg font-bold line-through"
                 >
-                  {{ product.old_price }} ₽
+                  {{ product?.old_price }} ₽
                 </div>
               </div>
               <ul class="sm:max-w-[360px] space-y-2 mt-8">
                 <li
-                  v-for="property in product.properties"
+                  v-for="property in product?.properties"
                   class="flex justify-between text-body"
                 >
-                  <strong class="text-white">{{ property.title }}:</strong>
-                  {{ property.value }}
+                  <strong class="text-white">{{ property?.title }}:</strong>
+                  {{ property?.value }}
                 </li>
               </ul>
 
@@ -183,7 +199,7 @@ export default {
                   class="grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-4"
                 >
                   <div
-                    v-for="(values, option) in product.options"
+                    v-for="(values, option) in product?.options"
                     class="flex flex-col gap-2"
                   >
                     <label
@@ -192,12 +208,13 @@ export default {
                       >{{ option }}</label
                     >
                     <select
+                      v-model="options[option]"
                       id="filter-item-1"
                       class="form-select w-full h-12 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
                     >
                       <option
                         v-for="value in values"
-                        value="Белый"
+                        :value="value"
                         class="text-dark"
                       >
                         {{ value }}
@@ -215,6 +232,7 @@ export default {
                       -
                     </button>
                     <input
+                      @input="count = Number($event.target.value)"
                       type="number"
                       class="h-full px-2 md:px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs text-center font-bold shadow-transparent outline-0 transition"
                       min="1"
@@ -230,7 +248,11 @@ export default {
                       +
                     </button>
                   </div>
-                  <button type="submit" class="!px-6 xs:!px-8 btn btn-pink">
+                  <button
+                    @click.prevent="callAddToCart"
+                    type="submit"
+                    class="!px-6 xs:!px-8 btn btn-pink"
+                  >
                     Добавить в корзину
                   </button>
                   <a
@@ -262,13 +284,13 @@ export default {
             <div></div>
 
             <ul
-              v-for="description in product.descriptions"
+              v-for="description in product?.descriptions"
               class="mb-12 list-outside space-y-3"
             >
               <h5 class="mb-4 text-md lg:text-lg font-black">
-                {{ description.title }}
+                {{ description?.title }}
               </h5>
-              <li v-for="text in description.text.split(/(?<=\.)/)">
+              <li v-for="text in description?.text.split(/(?<=\.)/)">
                 {{ text }}
               </li>
             </ul>

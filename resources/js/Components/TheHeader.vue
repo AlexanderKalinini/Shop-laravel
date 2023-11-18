@@ -3,13 +3,31 @@ import BurgerMenu from "./BurgerMenu.vue";
 import HeaderDropdown from "./HeaderDropdown.vue";
 import router from "../router/router";
 import { fetchProducts } from "../Api/ProductApi.js";
+import { getCart, total } from "../../helpers/Cart.js";
 
 export default {
   components: {
     HeaderDropdown,
     BurgerMenu,
   },
+
+  created() {
+    this.cart = getCart();
+    window.addEventListener("storage", this.handleSession);
+  },
+
+  destroyed() {
+    window.removeEventListener("storage", this.handleSession);
+  },
+
   computed: {
+    count() {
+      const count = this?.cart?.reduce((acc, val) => acc + val.count, 0);
+      return count > 0 ? count : null;
+    },
+
+    total: total,
+
     userName() {
       return this.$store?.state?.user?.name;
     },
@@ -21,6 +39,7 @@ export default {
       toggleMenu: false,
       searchInput: this.$store.state.filters.title,
       products: [],
+      cart: [],
     };
   },
   watch: {
@@ -34,6 +53,11 @@ export default {
   },
 
   methods: {
+    handleSession(event) {
+      if (event.key !== "cart") return;
+      this.cart = getCart();
+    },
+
     toggleDropdown() {
       this.dropdownProfile = !this.dropdownProfile;
     },
@@ -226,10 +250,12 @@ export default {
               />
             </svg>
             <div class="hidden flex-col gap-2 sm:flex">
-              <span class="text-xxs leading-none text-body">3 шт.</span>
+              <span class="text-xxs leading-none text-body">{{
+                count && count + " шт"
+              }}</span>
               <span
                 class="text-xxs font-bold !leading-none text-white 2xl:text-xs"
-                >57 900 ₽</span
+                >{{ total > 0 ? total + " ₽" : null }}</span
               >
             </div>
           </router-link>

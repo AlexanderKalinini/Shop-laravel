@@ -15,6 +15,7 @@ import ResetPasswordPage from "../Pages/ResetPasswordPage.vue";
 import SearchPage from "../Pages/SearchPage.vue";
 import SignUpPage from "../Pages/SignUpPage.vue";
 import SignUpMailPage from "../Pages/SugnUpMailPage.vue";
+import FavoritPage from "../Pages/FavoritPage.vue";
 
 const routes = [
     {
@@ -101,6 +102,11 @@ const routes = [
         path: "/order-success",
         component: OrderSuccessPage,
         name: "order.success",
+    },
+    {
+        path: "/favorit",
+        component: FavoritPage,
+        name: "favorit",
     },
     {
         path: "/:pathMatch(.*)*",

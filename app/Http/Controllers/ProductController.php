@@ -16,7 +16,11 @@ class ProductController extends Controller
 
     public function index()
     {
-        $product = Product::orderBy('count_estimates', 'desc')->with('optionValues')->limit(4)->get();
+        $product = Product::orderBy('count_estimates', 'desc')
+            ->with('optionValues')
+            ->with('properties')
+            ->limit(4)
+            ->get();
         return ProductResource::collection($product);
     }
 

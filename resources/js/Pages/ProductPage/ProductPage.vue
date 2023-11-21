@@ -4,10 +4,8 @@ import LayoutComponent from "../../Layuot/LayoutComponent.vue";
 import Breadcrumps from "../../Components/Breadcrumps.vue";
 import { getProduct } from "../../Api/ProductApi.js";
 import { getProductByIds } from "../../Api/ProductApi.js";
-import {
-  addProductToCart,
-  sessionEventDispatchCart,
-} from "../../../helpers/Cart.js";
+import { addProductToCart } from "../../../helpers/Cart.js";
+import { sessionStorageEvent } from "../../../helpers/Session";
 
 export default {
   components: {
@@ -54,7 +52,7 @@ export default {
 
     callAddToCart() {
       addProductToCart(this.product, this.count, this.options);
-      sessionEventDispatchCart();
+      sessionStorageEvent("cart");
     },
   },
 

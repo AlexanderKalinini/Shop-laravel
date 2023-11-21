@@ -3,10 +3,8 @@ import LayoutComponent from "../Layuot/LayoutComponent.vue";
 import { clearCart, getCart } from "../../helpers/Cart.js";
 import { total } from "../../helpers/Cart.js";
 import { deleteItemFromCart } from "../../helpers/Cart.js";
-import {
-  addProductToCart,
-  sessionEventDispatchCart,
-} from "../../helpers/Cart.js";
+import { sessionStorageEvent } from "../../helpers/Session.js";
+import { addProductToCart } from "../../helpers/Cart.js";
 
 export default {
   components: {
@@ -31,13 +29,13 @@ export default {
     callAddToCart(product, count, options, input) {
       addProductToCart(product, count, options, input);
       this.updateCart();
-      sessionEventDispatchCart();
+      sessionStorageEvent("cart");
     },
 
     deleteItemCart(id, optons) {
       deleteItemFromCart(id, optons);
       this.updateCart();
-      sessionEventDispatchCart();
+      sessionStorageEvent("cart");
     },
 
     updateCart() {
@@ -179,7 +177,10 @@ export default {
                   </td>
                   <td class="py-4 px-4 md:px-6 rounded-r-2xl bg-card">
                     <button
-                      @click="deleteItemCart(product.id, product.options)"
+                      @click="
+                        deleteItemCart(product.id, product.options),
+                          sessionEventDispatchCart()
+                      "
                       class="w-12 !h-12 !px-0 btn btn-pink"
                       title="Удалить из корзины"
                     >

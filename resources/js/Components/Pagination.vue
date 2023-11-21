@@ -3,6 +3,7 @@ export default {
   props: {
     links: Array,
   },
+
   methods: {
     setPage(page) {
       this.$store.commit("setFilter", { page: page });

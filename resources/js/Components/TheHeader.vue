@@ -4,6 +4,7 @@ import HeaderDropdown from "./HeaderDropdown.vue";
 import router from "../router/router";
 import { fetchProducts } from "../Api/ProductApi.js";
 import { getCart, total } from "../../helpers/Cart.js";
+import Favorit from "../../helpers/Favorit";
 
 export default {
   components: {
@@ -13,6 +14,7 @@ export default {
 
   created() {
     this.cart = getCart();
+    this.favorit = new Favorit();
     window.addEventListener("storage", this.handleSession);
   },
 
@@ -26,6 +28,10 @@ export default {
       return count > 0 ? count : null;
     },
 
+    asdf() {
+      return this.favorit.total();
+    },
+
     total: total,
 
     userName() {
@@ -35,6 +41,7 @@ export default {
 
   data() {
     return {
+      favorit: null,
       dropdownProfile: false,
       toggleMenu: false,
       searchInput: this.$store.state.filters.title,
@@ -54,8 +61,12 @@ export default {
 
   methods: {
     handleSession(event) {
-      if (event.key !== "cart") return;
-      this.cart = getCart();
+      if (event.key === "cart") {
+        this.cart = getCart();
+      }
+      if (event.key === "favorit") {
+        this.favorit = new Favorit();
+      }
     },
 
     toggleDropdown() {
@@ -102,7 +113,6 @@ export default {
             />
           </router-link>
         </div>
-        <!-- /.header-logo -->
         <div
           class="header-menu ml-8 mr-8 hidden grow items-center gap-8 lg:flex"
         >
@@ -259,6 +269,29 @@ export default {
               >
             </div>
           </router-link>
+          <router-link
+            :to="{ name: 'favorit' }"
+            class="flex items-center gap-3 text-pink hover:text-white"
+          >
+            <svg
+              class="w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 52 52"
+            >
+              <path
+                d="M26 48.486c-.263 0-.526-.067-.762-.203-.255-.148-6.336-3.679-12.504-8.998-3.656-3.153-6.574-6.28-8.673-9.295C1.344 26.09-.022 22.338 0 18.84c.025-4.072 1.483-7.901 4.106-10.782 2.667-2.93 6.226-4.544 10.021-4.544 4.865 0 9.312 2.725 11.872 7.042 2.56-4.317 7.007-7.042 11.872-7.042 3.586 0 7.007 1.456 9.634 4.1 2.883 2.9 4.52 7 4.494 11.245-.022 3.493-1.414 7.24-4.137 11.135-2.105 3.012-5.02 6.138-8.66 9.29-6.146 5.32-12.183 8.85-12.437 8.997a1.524 1.524 0 0 1-.766.206Z"
+              />
+            </svg>
+            <div class="hidden flex-col gap-2 sm:flex">
+              <span
+                class="text-xxs font-bold !leading-none text-white 2xl:text-xs"
+              >
+                {{ favorit.total() }}
+              </span>
+            </div>
+          </router-link>
+
           <button
             @click="toggleBurgerMenu"
             id="burgerMenu"

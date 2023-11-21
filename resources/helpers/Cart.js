@@ -1,19 +1,12 @@
 import { getObjFromSession, addObjToSession } from "./Session";
 
-export function sessionEventDispatchCart() {
-    window.dispatchEvent(
-        new StorageEvent("storage", {
-            key: "cart",
-        })
-    );
-}
-
 export function getCart() {
     return getObjFromSession("cart");
 }
 
 export function clearCart() {
     sessionStorage.removeItem("cart");
+    sessionStorageEvent();
 }
 
 export function deleteItemFromCart(id, options) {
@@ -21,7 +14,6 @@ export function deleteItemFromCart(id, options) {
     cart = cart.filter((el) => {
         return !isEqualObjects(el.options, options) || el.id !== id;
     });
-
     addObjToSession("cart", cart);
 }
 
@@ -45,6 +37,7 @@ export function addProductToCart(
     input = false
 ) {
     if (!count) return;
+
     const defaultOptions = Object.fromEntries(
         Object.entries(product?.options).map((el) => {
             return [el[0], el[1][0]];
@@ -86,8 +79,6 @@ export function addProductToCart(
         }
 
         cart.push(mappedProd);
-
         addObjToSession("cart", cart);
-        sessionEventDispatchCart();
     }
 }

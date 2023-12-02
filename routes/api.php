@@ -9,6 +9,7 @@ use App\Http\Controllers\FilterConroller;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromoController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,8 +27,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-
-
+Route::patch('/edit-profile', [AuthController::class, 'editProfile'])->name('edit.profile');
 Route::delete('/logout', [AuthController::class, "logout"])->name("logout")->middleware('auth');
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/getUser', UserController::class)->name('get.user');

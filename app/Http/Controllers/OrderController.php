@@ -75,7 +75,7 @@ class OrderController extends Controller
             }
         }
 
-        Notification::route('mail', $order['email'] ?? Auth::user()->email)
+        Notification::route('mail', $order['email'])
             ->notify(new OrderNotification($order));
 
         return $order;

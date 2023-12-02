@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditProfileRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Models\User;
@@ -108,5 +109,25 @@ class AuthController extends Authenticate
         return $status === Password::PASSWORD_RESET
             ? ['status' => __($status)]
             : ['status' => __($status)];
+    }
+
+    public function editProfile(EditProfileRequest $request)
+    {
+        if (!Auth::check()) return;
+
+        $userData = $request->validated();
+
+        $user = User::find(Auth::id());
+
+        $user->name = $userData['name'] ?? $user->name;
+        $user->email = $userData['email'] ?? $user->email;
+
+        if (isset($userData['password'])) {
+            $user->password = Hash::make($userData['password']);
+        }
+
+        $user->save();
+
+        return $user;
     }
 }

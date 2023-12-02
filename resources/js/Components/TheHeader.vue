@@ -14,6 +14,7 @@ export default {
 
   created() {
     this.cart = getCart();
+
     this.favorit = new Favorit();
     window.addEventListener("storage", this.handleSession);
   },
@@ -23,19 +24,15 @@ export default {
   },
 
   computed: {
-    count() {
-      const count = this?.cart?.reduce((acc, val) => acc + val.count, 0);
-      return count > 0 ? count : null;
+    quantity() {
+      const quantity = this?.cart?.reduce((acc, val) => acc + val.quantity, 0);
+      return quantity > 0 ? quantity : null;
     },
-
-    asdf() {
-      return this.favorit.total();
+    total() {
+      return total(this.cart);
     },
-
-    total: total,
-
-    userName() {
-      return this.$store?.state?.user?.name;
+    user() {
+      return this.$store?.state?.user;
     },
   },
 
@@ -49,6 +46,7 @@ export default {
       cart: [],
     };
   },
+
   watch: {
     async searchInput(newVal, oldVal) {
       if (newVal.length > 3) {
@@ -93,11 +91,7 @@ export default {
 };
 </script>
 <template>
-  <BurgerMenu
-    v-if="toggleMenu"
-    :userName="userName"
-    :toggleMenu="toggleBurgerMenu"
-  />
+  <BurgerMenu v-if="toggleMenu" :user="user" :toggleMenu="toggleBurgerMenu" />
   <!-- Site header -->
   <header class="header pt-6 xl:pt-12">
     <div class="container">
@@ -105,7 +99,7 @@ export default {
         class="header-inner flex items-center justify-between lg:justify-start"
       >
         <div class="header-logo shrink-0">
-          <router-link to="/" rel="home">
+          <router-link :to="{ name: 'home' }">
             <img
               src="/images/logo.svg"
               class="h-[30px] w-[120px] xs:h-[36px] xs:w-[148px] md:h-[50px] md:w-[201px]"
@@ -181,7 +175,7 @@ export default {
         <div class="header-actions flex items-center gap-3 md:gap-5">
           <router-link
             :to="{ name: 'login' }"
-            v-if="!userName"
+            v-if="!user"
             class="profile hidden items-center xs:flex"
           >
             <svg
@@ -206,19 +200,19 @@ export default {
               >Войти</span
             >
           </router-link>
-          <div class="profile relative" v-if="userName">
+          <div class="profile relative" v-if="user">
             <button
               @click="toggleDropdown()"
               class="flex items-center text-white transition hover:text-pink"
             >
               <span class="sr-only">Профиль</span>
               <img
-                src="/images/avatar.jpg"
+                :src="user?.thumbnail"
                 class="h-7 w-7 shrink-0 rounded-full md:h-9 md:w-9"
-                alt="User image"
+                alt="user"
               />
               <span class="ml-2 hidden font-medium md:block">{{
-                userName
+                user?.name
               }}</span>
               <svg
                 class="ml-2 h-3 w-3 shrink-0"
@@ -242,7 +236,7 @@ export default {
               leave-from-class="opacity-100"
               leave-to-class="opacity-0"
             >
-              <HeaderDropdown v-if="dropdownProfile" :userName="userName" />
+              <HeaderDropdown v-if="dropdownProfile" :userName="user.name" />
             </transition>
           </div>
           <router-link
@@ -261,7 +255,7 @@ export default {
             </svg>
             <div class="hidden flex-col gap-2 sm:flex">
               <span class="text-xxs leading-none text-body">{{
-                count && count + " шт"
+                quantity && quantity + " шт"
               }}</span>
               <span
                 class="text-xxs font-bold !leading-none text-white 2xl:text-xs"

@@ -20,11 +20,13 @@ export default {
 
   async created() {
     this.product = await getProduct(this.slug);
+
     this.options = Object.fromEntries(
       Object.entries(this?.product?.options).map((el) => {
         return [el[0], el[1][0]];
       })
     );
+
     sessionStorage.setItem("also" + this.product.id, this.product.id);
     this.seenProducts = await getProductByIds(this.getIdsFromSession());
   },

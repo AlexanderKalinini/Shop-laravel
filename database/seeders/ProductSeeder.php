@@ -22,10 +22,12 @@ class ProductSeeder extends Seeder
 
 
         Category::factory(10)->has(
-            Product::factory(10)
+            Product::factory(5)
                 ->hasAttached($properties, function () {
                     return ['value' => ucfirst(fake()->word())];
-                })->hasAttached($optionValue)
+                })->hasAttached($optionValue, function () {
+                    return ['quantity' => fake()->numberBetween(1, 1000)];
+                })
                 ->hasDescriptions(
                     3,
                     function (array $attributes, Product $product) {

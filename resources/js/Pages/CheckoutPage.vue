@@ -1,9 +1,119 @@
 <script>
+import { getCart, total } from "../../helpers/Cart";
+import Breadcrumps from "../Components/Breadcrumps.vue";
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
+import { postOrder as order, getPromoByTitle } from "../Api/OrderApi";
+import { signup } from "../Api/AuthApi";
+import axios from "axios";
 
 export default {
   components: {
     LayoutComponent,
+    Breadcrumps,
+  },
+
+  created() {
+    this.user = this.$store?.state?.user;
+    this.cart = getCart();
+    this.order.cart = JSON.stringify(this.cart);
+    this.order.name = this.userNameSurname[0];
+    this.order.surname = this.userNameSurname[1];
+    this.order.email = this.user?.email;
+    this.promoError = null;
+  },
+
+  data() {
+    return {
+      user: null,
+      cart: null,
+      password: null,
+      password_confirmation: null,
+      errors: null,
+      promo: null,
+      promoDeleted: null,
+      promoError: null,
+      quantityError: null,
+      deliveryCosts: 0,
+      order: {
+        name: null,
+        surname: null,
+        phoneNumber: null,
+        email: null,
+        deliveryMethod: "pickup",
+        paymentMethod: "card",
+        cart: null,
+        promo: null,
+        city: "",
+        street: "",
+      },
+      createAccount: false,
+      crumbs: [
+        { title: "Главная", routeName: "home" },
+        { title: "Корзина покупок", routeName: "cart" },
+        { title: "Оформление заказа", routeName: null },
+      ],
+    };
+  },
+  computed: {
+    userNameSurname() {
+      return this.user?.name?.split(" ") || [];
+    },
+
+    totalCart() {
+      return total(this?.cart);
+    },
+
+    total() {
+      return this.totalCart - this.countDiscount + this.deliveryCosts;
+    },
+
+    countDiscount() {
+      return Math.round(total(this?.cart) * this.order?.promo?.discount) || 0;
+    },
+  },
+  methods: {
+    async getPromo() {
+      this.promoDeleted = null;
+      this.promoError = null;
+      if (!(this.promo = this.$refs.promoInput.value)) return;
+      try {
+        this.order.promo = await getPromoByTitle(this.promo);
+      } catch (err) {
+        this.promoError = err.response.statusText;
+      }
+    },
+
+    async signup() {
+      if (this.createAccount) {
+        await axios.get("/sanctum/csrf-cookie");
+        try {
+          await signup({
+            name: this.order.name + " " + this.order.surname,
+            email: this.order.email,
+            password: this.password,
+            password_confirmation: this.password_confirmation,
+          });
+        } catch (err) {
+          this.errors = err.response.data.errors;
+        }
+        this.$store.dispatch("fetchUser");
+      }
+    },
+
+    async postOrder() {
+      await axios.get("/sanctum/csrf-cookie");
+      try {
+        await order(this.order);
+      } catch (err) {
+        console.log(err);
+        this.errors = err.response.data.errors;
+        if (
+          err.response.data.exception === "App\\Exceptions\\QuantityException"
+        ) {
+          this.quantityError = err.response.data.message;
+        }
+      }
+    },
   },
 };
 </script>
@@ -12,23 +122,7 @@ export default {
     <main class="py-16 lg:py-20">
       <div class="container">
         <!-- Breadcrumbs -->
-        <ul class="breadcrumbs flex flex-wrap gap-y-1 gap-x-4 mb-6">
-          <li>
-            <router-link
-              :to="{ name: 'home' }"
-              class="text-body hover:text-pink text-xs"
-              >Главная</router-link
-            >
-          </li>
-          <li>
-            <a href="cart.html" class="text-body hover:text-pink text-xs"
-              >Корзина покупок</a
-            >
-          </li>
-          <li>
-            <span class="text-body text-xs">Оформление заказа</span>
-          </li>
-        </ul>
+        <Breadcrumps :crumbs="crumbs" />
 
         <section>
           <!-- Section heading -->
@@ -44,65 +138,108 @@ export default {
               </h3>
               <div class="space-y-3">
                 <input
+                  @input="order.name = $event.target.value"
                   type="text"
                   class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
                   placeholder="Имя"
-                  required
+                  :value="userNameSurname[0] || order.name"
                 />
+                <div
+                  v-if="errors?.name"
+                  class="mt-3 text-pink text-xxs xs:text-xs"
+                >
+                  {{ errors?.name.join(" ") }}
+                </div>
                 <input
+                  @input="order.surname = $event.target.value"
                   type="text"
                   class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
                   placeholder="Фамилия"
-                  required
+                  :value="userNameSurname[1] || order.surname"
                 />
+                <div
+                  v-if="errors?.surname"
+                  class="mt-3 text-pink text-xxs xs:text-xs"
+                >
+                  {{ errors?.surname.join(" ") }}
+                </div>
                 <input
-                  type="text"
+                  @input="order.phoneNumber = $event.target.value"
+                  type="number"
                   class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
                   placeholder="Номер телефона"
-                  required
                 />
+                <div
+                  v-if="errors?.phoneNumber"
+                  class="mt-3 text-pink text-xxs xs:text-xs"
+                >
+                  {{ errors?.phonemail.join(" ") }}
+                </div>
                 <input
+                  @input="order.email = $event.target.value"
                   type="email"
                   class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
                   placeholder="E-mail"
-                  required
+                  :value="user?.email || order.email"
                 />
-                <div x-data="{ createAccount: false }">
+                <div
+                  v-if="errors?.email"
+                  class="mt-3 text-pink text-xxs xs:text-xs"
+                >
+                  {{ errors?.email.join(" ") }}
+                </div>
+                <div v-if="!user">
                   <div class="py-3 text-body">
                     Вы можете создать аккаунт после оформления заказа
                   </div>
                   <div class="form-checkbox">
-                    <input type="checkbox" id="checkout-create-account" />
+                    <input
+                      v-model="createAccount"
+                      type="checkbox"
+                      id="checkout-create-account"
+                    />
                     <label
                       for="checkout-create-account"
                       class="form-checkbox-label"
-                      @click="createAccount = !createAccount"
                       >Зарегистрировать аккаунт</label
                     >
                   </div>
-                  <div
-                    x-show="createAccount"
-                    x-transition:enter="ease-out duration-300"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="ease-in duration-150"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
+                  <transition
+                    enter-from-class="opacity-0"
+                    enter-active-class="ease-out duration-300"
+                    enter-to-class="opacity-100"
+                    leave-active-class="ease-in duration-150"
+                    leave-from-class="opacity-100"
+                    leave-to-class="opacity-0"
                     class="mt-4 space-y-3"
                   >
-                    <input
-                      type="password"
-                      class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
-                      placeholder="Придумайте пароль"
-                      required
-                    />
-                    <input
-                      type="password"
-                      class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
-                      placeholder="Повторите пароль"
-                      required
-                    />
-                  </div>
+                    <div v-if="createAccount">
+                      <input
+                        v-model="password"
+                        type="password"
+                        class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
+                        placeholder="Придумайте пароль"
+                      />
+                      <div
+                        v-if="errors?.password"
+                        class="mt-3 text-pink text-xxs xs:text-xs"
+                      >
+                        {{ errors?.password.join(" ") }}
+                      </div>
+                      <input
+                        v-model="password_confirmation"
+                        type="password"
+                        class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
+                        placeholder="Повторите пароль"
+                      />
+                      <div
+                        v-if="errors?.password_confirmation"
+                        class="mt-3 text-pink text-xxs xs:text-xs"
+                      >
+                        {{ errors?.password.join(" ") }}
+                      </div>
+                    </div>
+                  </transition>
                 </div>
               </div>
             </div>
@@ -117,21 +254,25 @@ export default {
                 <div class="space-y-5">
                   <div class="form-radio">
                     <input
+                      @click="deliveryCosts = 0"
                       type="radio"
-                      name="delivery-method[]"
+                      v-model="order.deliveryMethod"
                       id="delivery-method-pickup"
+                      value="pickup"
                     />
                     <label for="delivery-method-pickup" class="form-radio-label"
                       >Самовывоз</label
                     >
                   </div>
-                  <div class="space-y-3">
+
+                  <div>
                     <div class="form-radio">
                       <input
                         type="radio"
-                        name="delivery-method[]"
+                        @click="deliveryCosts = 1000"
+                        v-model="order.deliveryMethod"
                         id="delivery-method-address"
-                        checked
+                        value="delivery"
                       />
                       <label
                         for="delivery-method-address"
@@ -139,18 +280,47 @@ export default {
                         >Адресная доставка</label
                       >
                     </div>
-                    <input
-                      type="text"
-                      class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
-                      placeholder="Город"
-                      required
-                    />
-                    <input
-                      type="text"
-                      class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
-                      placeholder="Адрес"
-                      required
-                    />
+
+                    <transition
+                      enter-from-class="opacity-0"
+                      enter-active-class="ease-out duration-300"
+                      enter-to-class="opacity-100"
+                      leave-active-class="ease-in duration-150"
+                      leave-from-class="opacity-100"
+                      leave-to-class="opacity-0"
+                    >
+                      <div
+                        class="space-y-3"
+                        v-if="order.deliveryMethod === 'delivery'"
+                      >
+                        <input
+                          @input="order.city = $event.target.value"
+                          type="text"
+                          class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
+                          placeholder="Город"
+                          :value="order.city"
+                        />
+                        <div
+                          v-if="errors?.city"
+                          class="mt-3 text-pink text-xxs xs:text-xs"
+                        >
+                          {{ errors?.city.join(" ") }}
+                        </div>
+                        <input
+                          @input="order.street = $event.target.value"
+                          type="text"
+                          class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
+                          placeholder="Адрес"
+                          :value="order.street"
+                        />
+                        <div
+                          v-if="errors?.street"
+                          class="mt-3 text-pink text-xxs xs:text-xs"
+                        >
+                          {{ errors?.street.join(" ") }}
+                        </div>
+                      </div>
+                    </transition>
                   </div>
                 </div>
               </div>
@@ -162,9 +332,9 @@ export default {
                   <div class="form-radio">
                     <input
                       type="radio"
-                      name="payment-method[]"
+                      v-model="order.paymentMethod"
                       id="payment-method-1"
-                      checked
+                      value="cash"
                     />
                     <label for="payment-method-1" class="form-radio-label"
                       >Наличными</label
@@ -173,8 +343,9 @@ export default {
                   <div class="form-radio">
                     <input
                       type="radio"
-                      name="payment-method[]"
+                      v-model="order.paymentMethod"
                       id="payment-method-2"
+                      value="card"
                     />
                     <label for="payment-method-2" class="form-radio-label"
                       >Кредитной картой</label
@@ -203,86 +374,48 @@ export default {
                   </th>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr v-for="product in cart">
                     <td scope="row" class="pb-3 border-b border-body/10">
                       <h4 class="font-bold">
                         <router-link
                           :to="{
                             name: 'product',
-                            params: { slug: 'asdf' },
+                            params: { slug: product.slug },
                           }"
                           class="inline-block text-white hover:text-pink break-words pr-3"
-                          >SteelSeries Aerox 3 Snow</router-link
+                          >{{ product.title }}</router-link
                         >
                       </h4>
                       <ul>
-                        <li class="text-body">Цвет: Белый</li>
-                        <li class="text-body">Размер (хват): Средний</li>
+                        <li
+                          v-for="option in Object.entries(product.options)"
+                          class="text-body"
+                        >
+                          {{ option[0] + ": " + option[1] }}
+                        </li>
                       </ul>
                     </td>
                     <td
                       class="px-2 pb-3 border-b border-body/20 whitespace-nowrap"
                     >
-                      2 шт.
+                      {{ product.quantity }}
                     </td>
                     <td
                       class="px-2 pb-3 border-b border-body/20 whitespace-nowrap"
                     >
-                      87 800 ₽
-                    </td>
-                  </tr>
-                  <tr>
-                    <td scope="row" class="pb-3 border-b border-body/10">
-                      <h4 class="font-bold">
-                        <a
-                          href="product.html"
-                          class="inline-block text-white hover:text-pink break-words pr-3"
-                          >SteelSeries Arctis 5 White 2019 Edition</a
-                        >
-                      </h4>
-                      <ul>
-                        <li class="text-body">Цвет: Белый</li>
-                      </ul>
-                    </td>
-                    <td
-                      class="px-2 pb-3 border-b border-body/20 whitespace-nowrap"
-                    >
-                      1 шт.
-                    </td>
-                    <td
-                      class="px-2 pb-3 border-b border-body/20 whitespace-nowrap"
-                    >
-                      58 730 ₽
-                    </td>
-                  </tr>
-                  <tr>
-                    <td scope="row" class="pb-3 border-b border-body/10">
-                      <h4 class="font-bold">
-                        <a
-                          href="product.html"
-                          class="inline-block text-white hover:text-pink break-words pr-3"
-                          >Hator Hypersport V2 (HTC-948) Black/White</a
-                        >
-                      </h4>
-                      <ul>
-                        <li class="text-body">Цвет: Черно-белый</li>
-                      </ul>
-                    </td>
-                    <td
-                      class="px-2 pb-3 border-b border-body/20 whitespace-nowrap"
-                    >
-                      1 шт.
-                    </td>
-                    <td
-                      class="px-2 pb-3 border-b border-body/20 whitespace-nowrap"
-                    >
-                      142 800 ₽
+                      {{ product.price * product.quantity }} ₽
                     </td>
                   </tr>
                 </tbody>
               </table>
+              <div
+                v-if="quantityError"
+                class="mt-3 text-pink text-xxs xs:text-xs"
+              >
+                {{ quantityError }}
+              </div>
               <div class="text-xs font-semibold text-right">
-                Всего: 289 330 ₽
+                Всего: {{ totalCart }} ₽
               </div>
 
               <div class="mt-8 space-y-8">
@@ -290,12 +423,13 @@ export default {
                 <div class="space-y-4">
                   <div class="flex gap-3">
                     <input
+                      ref="promoInput"
                       type="text"
                       class="grow w-full h-[56px] px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
-                      placeholder="Промокод"
-                      required
+                      placeholder="Промокод (fifty)"
                     />
                     <button
+                      @click.prevent="getPromo()"
                       type="submit"
                       class="shrink-0 w-14 !h-[56px] !px-0 btn btn-purple"
                     >
@@ -303,47 +437,72 @@ export default {
                     </button>
                   </div>
                   <div class="space-y-3">
-                    <div class="px-4 py-3 rounded-lg bg-[#137d3d] text-xs">
+                    <div
+                      v-if="order.promo"
+                      class="px-4 py-3 rounded-lg bg-[#137d3d] text-xs"
+                    >
                       Промокод
-                      <a
-                        href="#"
+                      <button
+                        @click="
+                          (promoDeleted = order.promo.title),
+                            (order.promo = null)
+                        "
                         class="mx-2 py-0.5 px-1.5 rounded-md border-dashed border-2 text-white hover:text-white/70 text-xs"
                         title="Удалить промокод"
-                        >&times; leeto15</a
                       >
+                        &times; {{ order.promo.title }}
+                      </button>
                       успешно добавлен.
                     </div>
-                    <!-- <div class="px-4 py-3 rounded-lg bg-[#b91414] text-xs">Промокод <b>leeto15</b> удалён.</div> -->
-                    <!-- <div class="px-4 py-3 rounded-lg bg-[#b91414] text-xs">Промокод <b>leeto15</b> не найден.</div> -->
+                    <div
+                      v-if="promoDeleted"
+                      class="px-4 py-3 rounded-lg bg-[#b91414] text-xs"
+                    >
+                      Промокод <b>{{ promoDeleted }}</b> удалён.
+                    </div>
+                    <div
+                      v-if="promoError === 'Not Found' && promo"
+                      class="px-4 py-3 rounded-lg bg-[#b91414] text-xs"
+                    >
+                      Промокод <b>{{ promo }}</b> не найден.
+                    </div>
                   </div>
                 </div>
 
                 <!-- Summary -->
                 <table class="w-full text-left">
                   <tbody>
-                    <tr>
+                    <tr v-if="deliveryCosts">
                       <th scope="row" class="pb-2 text-xs font-medium">
                         Доставка:
                       </th>
-                      <td class="pb-2 text-xs">600 ₽</td>
+                      <td class="pb-2 text-xs">{{ deliveryCosts }}</td>
                     </tr>
-                    <tr>
+                    <tr v-if="order.promo">
                       <th scope="row" class="pb-2 text-xs font-medium">
                         Промокод:
                       </th>
-                      <td class="pb-2 text-xs">15 398 ₽</td>
+                      <td class="pb-2 text-xs">
+                        {{ countDiscount }}
+                      </td>
                     </tr>
                     <tr>
                       <th scope="row" class="text-md 2xl:text-lg font-black">
                         Итого:
                       </th>
-                      <td class="text-md 2xl:text-lg font-black">245 930 ₽</td>
+                      <td class="text-md 2xl:text-lg font-black">
+                        {{ total }} ₽
+                      </td>
                     </tr>
                   </tbody>
                 </table>
 
                 <!-- Process to checkout -->
-                <button type="submit" class="w-full btn btn-pink">
+                <button
+                  @click.prevent="postOrder(order), signup()"
+                  type="submit"
+                  class="w-full btn btn-pink"
+                >
                   Оформить заказ
                 </button>
               </div>

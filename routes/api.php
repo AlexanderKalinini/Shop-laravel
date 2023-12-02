@@ -7,8 +7,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\FilterConroller;
 use App\Http\Controllers\ProductController;
-
-use App\Models\Product;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PromoController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -47,6 +47,8 @@ Route::get('/max-price', [ProductController::class, 'maxPrice']);
 Route::post('/products', [ProductController::class, 'showPaginate'])->name('products.paginate');
 Route::post('/products/id', [ProductController::class, 'showByIds'])->name('products.showbyids');
 Route::apiResource('product', ProductController::class);
+Route::apiResource('order', OrderController::class);
+Route::apiResource('promo', PromoController::class);
 
 Route::group(
     ['middleware' => 'web'],

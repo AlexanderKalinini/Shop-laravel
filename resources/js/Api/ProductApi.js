@@ -28,6 +28,7 @@ export async function fetchProducts(filters = {}) {
 
 export async function getProduct(slug) {
     const data = await axios.get(`/api/product/${slug}`);
+
     return data.data;
 }
 

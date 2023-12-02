@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Faker\Core\Number;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -18,7 +19,8 @@ class PromoCodeFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => Str::ucfirst($this->faker->word()),
+            "title" => Str::ucfirst($this->faker->word()),
+            "discount" => $this->faker->randomFloat(2, 0.01, 0.99)
         ];
     }
 }

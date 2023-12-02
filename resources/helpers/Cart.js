@@ -21,22 +21,27 @@ export function isEqualObjects(obj1, obj2) {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
 }
 
-export function total() {
-    if (!this.cart) {
+export function total(cart = []) {
+    if (!Array.isArray(cart)) {
+        return;
+    }
+
+    if (!cart || cart.length === 0) {
         return 0;
     }
-    return this?.cart?.reduce((acc, prod) => {
-        return acc + prod.count * prod.price;
+
+    return cart.reduce((acc, prod) => {
+        return acc + prod.quantity * prod.price;
     }, 0);
 }
 
 export function addProductToCart(
     product,
-    count = 1,
+    quantity = 1,
     options = {},
     input = false
 ) {
-    if (!count) return;
+    if (!quantity) return;
 
     const defaultOptions = Object.fromEntries(
         Object.entries(product?.options).map((el) => {
@@ -49,7 +54,7 @@ export function addProductToCart(
         slug: product?.slug,
         title: product?.title,
         price: product?.price,
-        count: Number(count),
+        quantity: Number(quantity),
         options: { ...defaultOptions, ...options },
     };
 
@@ -64,12 +69,12 @@ export function addProductToCart(
                 isEqualObjects(cart[index].options, mappedProd.options)
             ) {
                 if (input) {
-                    (cart[index].count = mappedProd.count) < 1
-                        ? (cart[index].count = 1)
+                    (cart[index].quantity = mappedProd.quantity) < 1
+                        ? (cart[index].quantity = 1)
                         : cart[index].index;
                 } else {
-                    (cart[index].count += mappedProd.count) < 1
-                        ? (cart[index].count = 1)
+                    (cart[index].quantity += mappedProd.quantity) < 1
+                        ? (cart[index].quantity = 1)
                         : cart[index].index;
                 }
 

@@ -70,7 +70,7 @@ class Product extends Model
 
     public function optionValues(): BelongsToMany
     {
-        return $this->belongsToMany(OptionValue::class);
+        return $this->belongsToMany(OptionValue::class)->withPivot('quantity');
     }
 
     public function descriptions(): HasMany

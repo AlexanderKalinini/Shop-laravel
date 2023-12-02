@@ -13,6 +13,9 @@ class PromoCodeSeeder extends Seeder
      */
     public function run(): void
     {
-        PromoCode::factory()->count(25)->create();
+        PromoCode::create([
+            "title" => "fifty",
+            "discount" => 0.5
+        ]);
     }
 }

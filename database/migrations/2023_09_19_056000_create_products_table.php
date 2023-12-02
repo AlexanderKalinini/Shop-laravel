@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->id();
             $table->timestamps();
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('title')->unique();
             $table->string('thumbnail')->nullable();
             $table->foreignIdFor(Brand::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
@@ -24,6 +24,7 @@ return new class extends Migration
             $table->unsignedInteger('price')->default(0);
             $table->unsignedInteger('old_price')->nullable();
             $table->unsignedInteger('count_estimates');
+
             // $table->string('bread_crumbs')->nullable();
             // $table->text('characteristics')->nullable();
             // $table->text('describe')->nullable();

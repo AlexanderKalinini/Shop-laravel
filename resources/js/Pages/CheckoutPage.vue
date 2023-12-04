@@ -1,10 +1,11 @@
 <script>
-import { getCart, total } from "../../helpers/Cart";
+import { clearCart, getCart, total } from "../../helpers/Cart";
 import Breadcrumps from "../Components/Breadcrumps.vue";
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
 import { postOrder as order, getPromoByTitle } from "../Api/OrderApi";
 import { signup } from "../Api/AuthApi";
 import axios from "axios";
+import router from "../router/router";
 
 export default {
   components: {
@@ -43,8 +44,10 @@ export default {
         paymentMethod: "card",
         cart: null,
         promo: null,
+        country: "",
         city: "",
         street: "",
+        totalPrice: "",
       },
       createAccount: false,
       crumbs: [
@@ -103,9 +106,11 @@ export default {
     async postOrder() {
       await axios.get("/sanctum/csrf-cookie");
       try {
-        await order(this.order);
+        this.order.totalPrice = this.totalCart - this.countDiscount;
+        const res = await order(this.order);
+        if (res) router.push({ name: "order.success" });
+        clearCart();
       } catch (err) {
-        console.log(err);
         this.errors = err.response.data.errors;
         if (
           err.response.data.exception === "App\\Exceptions\\QuantityException"
@@ -293,6 +298,19 @@ export default {
                         class="space-y-3"
                         v-if="order.deliveryMethod === 'delivery'"
                       >
+                        <input
+                          @input="order.country = $event.target.value"
+                          type="text"
+                          class="w-full h-16 px-4 rounded-lg border border-body/10 focus:border-pink focus:shadow-[0_0_0_3px_#EC4176] bg-white/5 text-white text-xs shadow-transparent outline-0 transition"
+                          placeholder="Страна"
+                          :value="order.country"
+                        />
+                        <div
+                          v-if="errors?.country"
+                          class="mt-3 text-pink text-xxs xs:text-xs"
+                        >
+                          {{ errors?.country.join(" ") }}
+                        </div>
                         <input
                           @input="order.city = $event.target.value"
                           type="text"

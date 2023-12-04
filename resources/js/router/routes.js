@@ -89,9 +89,14 @@ const routes = [
         props: true,
     },
     {
-        path: "/orders-item/:id",
+        path: "/order-items/:id",
         component: OrdersItemPage,
-        name: "orders.item",
+        name: "order.items",
+        props: (route) => ({
+            id: route.params.id,
+            timestamp: route.query.timestamp,
+            status: route.query.status,
+        }),
     },
     {
         path: "/search",

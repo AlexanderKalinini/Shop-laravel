@@ -206,7 +206,9 @@ export default {
           <div
             class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mt-8"
           >
-            <div class="text-[32px] font-black">{{ "Итого: " + total }} ₽</div>
+            <div v-if="total" class="text-[32px] font-black">
+              {{ "Итого: " + total }} ₽
+            </div>
             <div class="pb-3 lg:pb-0">
               <button
                 @click="callClearCart"

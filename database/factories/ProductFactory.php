@@ -27,13 +27,6 @@ class ProductFactory extends Factory
             "brand_id" => Brand::inRandomOrder()->first()->id,
             "producer_id" => Producer::inRandomOrder()->first()->id,
             "count_estimates" => $this->faker->numberBetween(1, 100000),
-            // "bread_crumbs" => $this->faker->mimeType(),
-            // "characteristics" => $this->faker->paragraph(3),
-            // "describe" => $this->faker->paragraph(4),
-            // "options" => $this->faker->paragraph(4),
-            // "rating" => $this->faker->randomFloat(1, 1, 5),
-            // "estimate" => $this->faker->numberBetween(1, 10),
-
         ];
     }
 }

@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\QuantityException;
 use App\Http\Requests\OrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Option;
 use App\Models\OptionValue;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\OrderItem;
 use App\Notifications\OrderNotification;
+use Faker\Core\Number;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Ramsey\Uuid\Type\Integer;
 
 class OrderController extends Controller
 {
@@ -21,7 +24,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        return Order::where("user_id", Auth::user()->id)
+            ->orWhere('email', Auth::user()->email)
+            ->get();
     }
 
     /**
@@ -36,22 +41,20 @@ class OrderController extends Controller
         $user = $request->safe()->except("cart");
         $cart = json_decode($request->safe()->only("cart")['cart'], true);
         $promo = $request->safe()->only('promo');
-
+        $status = "Заказ создан";
         // Добавление данных заказчика в БД
 
         $order = Order::create(
             array_merge($user, [
-                "delivery_method" => $user["deliveryMethod"],
-                "payment_method" => $user["paymentMethod"],
-                'phone_number' => $user['phoneNumber'],
                 "user_id" => Auth::user()->id ?? null,
+                "status" => $status,
             ])
         );
 
         $queryQuantityIds = [];
 
         foreach ($cart as $product) {
-            // Проверка на наличие товара и довавление квери и id опций в массив или выброс ошибки
+            // Проверка на наличие товара и довавление квери,id, опций в массив или выброс ошибки
             $queryQuantityIds[] = $this->checkQuantity($product);
         }
 
@@ -62,6 +65,7 @@ class OrderController extends Controller
                     'order_id' => $order['id'],
                     'product_id' => $product['id'],
                     'promo_code_id' => $promo['promo'] ?? null,
+                    'price' => $product['price'],
                     'quantity' => $product['quantity'],
                 ]
             );
@@ -84,9 +88,14 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $orderId)
     {
-        //
+        return OrderResource::collection(
+            OrderItem::where('order_id', $orderId)
+                ->with('optionValues')
+                ->with('product')
+                ->get()
+        );
     }
 
     /**
@@ -102,8 +111,11 @@ class OrderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $order = Order::find($id);
+        return $order->delete();
     }
+
+
     protected function checkQuantity($product)
     {;
         $queryQuantityIds = [];

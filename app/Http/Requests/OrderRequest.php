@@ -24,13 +24,15 @@ class OrderRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:2', 'max:30'],
             'surname' => ['required', 'string', 'min:2', 'max:30'],
-            'phoneNumber' => ['nullable', 'string', 'min:5', 'max:30'],
+            'phone_number' => ['nullable', 'string', 'min:5', 'max:30'],
             'email' => ['required', 'email', 'max:30'],
-            'deliveryMethod' => ['required', 'string'],
+            'delivery_method' => ['required', 'string'],
+            'country' => ['max:50', $this->input('deliveryMethod') === 'delivery' ? 'required' : 'nullable', 'string',],
             'city' => ['max:50', $this->input('deliveryMethod') === 'delivery' ? 'required' : 'nullable', 'string',],
             'street' => ['max:50', $this->input('deliveryMethod') === 'delivery' ? 'required' : 'nullable', 'string',],
-            'paymentMethod' => ['required', 'string'],
-            'promo' => ['nullable', 'numeric',],
+            'payment_method' => ['required', 'string'],
+            'promo' => ['nullable', 'numeric'],
+            'total_price' => ['required', 'numeric'],
             'cart' => ['required', 'json'],
         ];
     }

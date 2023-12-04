@@ -31,9 +31,13 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('email');
             $table->string("delivery_method");
+            $table->string("country")->nullable();
             $table->string('city')->nullable();
             $table->string('street')->nullable();
             $table->string('payment_method');
+            $table->unsignedBigInteger('total_price');
+            $table->string("status");
+            $table->softDeletes();
             $table->timestamps();
         });
 
@@ -42,7 +46,9 @@ return new class extends Migration
             $table->foreignIdFor(Order::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(PromoCode::class)->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->integer("quantity");
+            $table->unsignedBigInteger('price');
+            $table->unsignedBigInteger("quantity");
+            $table->softDeletes();
             $table->timestamps();
         });
 

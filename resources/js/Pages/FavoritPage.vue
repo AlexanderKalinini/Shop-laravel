@@ -41,8 +41,7 @@ export default {
       <div class="container">
         <Breadcrumps :crumbs="crumbs" />
         <section>
-          <h2 class="text-lg lg:text-[42px] font-black">Избранное</h2>
-
+          <h2 class="text-lg mb-8 lg:text-[42px] font-black">Избранное</h2>
           <ProductsInline
             @update-products="onUpdateProducts"
             :products="favorits.getFavorits()"

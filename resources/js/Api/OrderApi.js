@@ -17,7 +17,7 @@ export async function deleteItemById(id) {
     return res;
 }
 
-export async function getItemsById(id) {
+export async function getOrderById(id) {
     const res = await axios.get("/api/order/" + id);
     return res.data;
 }

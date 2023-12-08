@@ -1,4 +1,8 @@
-import { getObjFromSession, addObjToSession } from "./Session";
+import {
+    getObjFromSession,
+    addObjToSession,
+    sessionStorageEvent,
+} from "./Session";
 
 export function getCart() {
     return getObjFromSession("cart");
@@ -32,6 +36,22 @@ export function total(cart = []) {
 
     return cart.reduce((acc, prod) => {
         return acc + prod.quantity * prod.price;
+    }, 0);
+}
+
+export function totalDiscount(cart = []) {
+    if (!Array.isArray(cart)) {
+        return;
+    }
+
+    if (!cart || cart.length === 0) {
+        return 0;
+    }
+
+    return cart.reduce((acc, prod) => {
+        return Math.round(
+            acc + prod.quantity * prod.price * (prod?.promo_code?.discount ?? 0)
+        );
     }, 0);
 }
 

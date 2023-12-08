@@ -1,42 +1,41 @@
 <script>
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
-import { getItemsById } from "../Api/OrderApi";
+import { getOrderById } from "../Api/OrderApi";
 import { total } from "../../helpers/Cart";
-import { randomeString } from "../../helpers/String";
 import { mappedTimestamp } from "../../helpers/Date";
 
 export default {
   props: {
     id: String,
-    timestamp: String,
-    status: String,
   },
   components: {
     LayoutComponent,
   },
-  async mounted() {
-    await this.getProducts(this.id);
-    console.log(this.timestamp);
+
+  created() {
+    this.getOrder(this.id);
   },
+
   data() {
     return {
-      products: [],
+      order: {},
     };
   },
   computed: {
     total() {
-      return total(this.products);
+      return total(this.order.order_items);
+    },
+    mappedTimestamp() {
+      return mappedTimestamp(this.order?.created_at);
     },
   },
+
   methods: {
-    itemSlug() {
-      return randomeString();
-    },
-    async getProducts(id) {
+    async getOrder(id) {
       try {
-        const res = await getItemsById(id);
+        const res = await getOrderById(id);
         console.log(res);
-        this.products = res;
+        this.order = res;
       } catch (err) {
         console.log(err);
       }
@@ -71,13 +70,13 @@ export default {
             class="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 mb-8"
           >
             <h1 class="pb-4 md:pb-0 text-lg lg:text-[42px] font-black">
-              Заказ №{{ id }}
+              Заказ №{{ order?.id }}
             </h1>
             <div class="px-6 py-3 rounded-lg bg-purple">
-              {{ status }}
+              {{ order?.status }}
             </div>
             <div class="px-6 py-3 rounded-lg bg-card">
-              Дата заказа: {{ timestamp }}
+              Дата заказа: {{ mappedTimestamp }}
             </div>
           </div>
 
@@ -99,7 +98,7 @@ export default {
                 <th scope="col" class="py-3 px-6">Сумма</th>
               </thead>
               <tbody>
-                <tr v-for="product in products">
+                <tr v-for="product in order?.order_items">
                   <td scope="row" class="py-4 px-6 rounded-l-2xl bg-card">
                     <div
                       class="flex flex-col lg:flex-row min-w-[200px] gap-2 lg:gap-6"
@@ -108,7 +107,7 @@ export default {
                         class="shrink-0 overflow-hidden w-[64px] lg:w-[84px] h-[64px] lg:h-[84px] rounded-2xl"
                       >
                         <img
-                          :src="product.product.thumbnail"
+                          :src="product?.product.thumbnail"
                           class="object-cover w-full h-full"
                           alt="SteelSeries Aerox 3 Snow"
                         />
@@ -126,10 +125,10 @@ export default {
                         </h4>
                         <ul class="space-y-1 mt-2 text-xs">
                           <li
-                            v-for="(value, option) in product.options"
+                            v-for="option in product?.option_values"
                             class="text-body"
                           >
-                            {{ option + ": " + value }}
+                            {{ option.option.title + ": " + option.value }}
                           </li>
                         </ul>
                       </div>

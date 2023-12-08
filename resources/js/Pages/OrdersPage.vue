@@ -28,18 +28,6 @@ export default {
       await this.getOrders();
     },
     mappedTimestamp: mappedTimestamp,
-    goToOrderItem(order) {
-      this.$router.push({
-        name: "order.items",
-        query: {
-          timestamp: this.mappedTimestamp(order.created_at),
-          status: order.status,
-        },
-        params: {
-          id: order.id,
-        },
-      });
-    },
   },
 };
 </script>
@@ -72,15 +60,6 @@ export default {
             >
               <div class="py-4">
                 <div class="flex gap-6">
-                  <!-- <div
-                    class="shrink-0 overflow-hidden w-[64px] sm:w-[84px] h-[64px] sm:h-[84px] rounded-2xl"
-                  >
-                    <img
-                      src="/images/products/1.jpg"
-                      class="object-cover w-full h-full"
-                      alt="Заказ №3517"
-                    />
-                  </div> -->
                   <div class="grow py-2">
                     <div
                       class="flex flex-col md:flex-row md:items-center gap-2"
@@ -110,12 +89,15 @@ export default {
               </div>
               <div class="py-4">
                 <div class="flex items-center gap-4">
-                  <button
-                    @click="goToOrderItem(order)"
+                  <router-link
+                    :to="{
+                      name: 'order.items',
+                      params: { id: order.id },
+                    }"
                     class="!h-14 btn btn-purple"
                   >
                     Подробнее
-                  </button>
+                  </router-link>
                   <button
                     @click="deleteItem(order.id)"
                     class="w-14 !h-14 !px-0 btn btn-pink"

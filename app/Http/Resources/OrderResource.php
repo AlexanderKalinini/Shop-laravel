@@ -2,13 +2,8 @@
 
 namespace App\Http\Resources;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\PropertyResource;
-use App\Http\Resources\OptionValueResource;
-
-
 
 class OrderResource extends JsonResource
 {
@@ -21,16 +16,17 @@ class OrderResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            'created_at' => $this->created_at,
-            "order_id" => $this->order_id,
-            "price" => $this->price,
-            "product_id" => $this->product_id,
-            "quantity" => $this->quantity,
-            "product" => $this->whenLoaded('product'),
-            "options" => OptionValueResource::collection($this->whenLoaded("optionValues"))
-                ->mapToGroups(function (OptionValueResource $item) {
-                    return [$item->option->title => $item->value];
-                }),
+            'name' => $this->name,
+            'surname' => $this->surname,
+            'phone_number' => $this->phone_number,
+            'email' => $this->email,
+            "delivery_method" => $this->payment_method,
+            "country" => $this->country,
+            'city' => $this->city,
+            'street' => $this->street,
+            'payment_method' => $this->payment_method,
+            'total_price' => $this->total_price,
+            "status" => $this->status,
         ];
     }
 }

@@ -6,6 +6,7 @@ import { postOrder as order, getPromoByTitle } from "../Api/OrderApi";
 import { signup } from "../Api/AuthApi";
 import axios from "axios";
 import router from "../router/router";
+import { getPaymentLink } from "../Api/Payment";
 
 export default {
   components: {
@@ -86,6 +87,14 @@ export default {
       }
     },
 
+    async paymentRedirect(orderId) {
+      const res = await getPaymentLink({
+        price: +this.total,
+        order_id: +orderId,
+      });
+      window.location.href = res.data;
+    },
+
     async signup() {
       if (this.createAccount) {
         await axios.get("/sanctum/csrf-cookie");
@@ -108,14 +117,15 @@ export default {
       try {
         this.order.totalPrice = this.totalCart - this.countDiscount;
         const res = await order(this.order);
-        if (res) router.push({ name: "order.success" });
+        await this.paymentRedirect(res.data.id);
         clearCart();
       } catch (err) {
-        this.errors = err.response.data.errors;
+        this.errors = err?.response?.data?.errors;
         if (
-          err.response.data.exception === "App\\Exceptions\\QuantityException"
+          err?.response?.data?.exception ===
+          "App\\Exceptions\\QuantityException"
         ) {
-          this.quantityError = err.response.data.message;
+          this.quantityError = err.response?.data?.message;
         }
       }
     },
@@ -517,7 +527,7 @@ export default {
 
                 <!-- Process to checkout -->
                 <button
-                  @click.prevent="postOrder(order), signup()"
+                  @click.prevent="signup(), postOrder()"
                   type="submit"
                   class="w-full btn btn-pink"
                 >

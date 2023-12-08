@@ -1,11 +1,52 @@
 <script>
 import LayoutComponent from "../Layuot/LayoutComponent.vue";
+import { getOrderById } from "../Api/OrderApi";
+import { total, totalDiscount } from "../../helpers/Cart";
+import { mappedTimestamp } from "../../helpers/Date";
 
 export default {
+  props: {
+    id: String,
+  },
   components: {
     LayoutComponent,
   },
-  methods: {},
+
+  created() {
+    this.getOrder(this.id);
+  },
+
+  data() {
+    return {
+      order: {},
+    };
+  },
+
+  computed: {
+    totalCart() {
+      return total(this.order.order_items);
+    },
+
+    totalDiscount() {
+      return totalDiscount(this.order.order_items);
+    },
+
+    mappedTimestamp() {
+      return mappedTimestamp(this.order?.created_at);
+    },
+  },
+
+  methods: {
+    async getOrder(id) {
+      try {
+        const res = await getOrderById(id);
+
+        this.order = res;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  },
 };
 </script>
 <template>
@@ -15,12 +56,14 @@ export default {
         <!-- Breadcrumbs -->
         <ul class="breadcrumbs flex flex-wrap gap-y-1 gap-x-4 mb-6">
           <li>
-            <a href="index.html" class="text-body hover:text-pink text-xs"
-              >Главная</a
+            <router-link to="/" class="text-body hover:text-pink text-xs"
+              >Главная</router-link
             >
           </li>
           <li>
-            <span class="text-body text-xs">Заказ №4820 успешно оформлен</span>
+            <span class="text-body text-xs"
+              >Заказ №{{ id }} успешно оформлен</span
+            >
           </li>
         </ul>
 
@@ -29,15 +72,15 @@ export default {
           <div
             class="flex flex-col 2xl:flex-row 2xl:items-center gap-3 md:gap-6 mb-8"
           >
-            <h1 class="pb-4 2xl:pb-0 text-lg lg:text-[42px] font-black">
-              Заказ №4820 успешно оформлен
+            <h1 class="pb-4 md:pb-0 text-lg lg:text-[42px] font-black">
+              Заказ №{{ order?.id }} успешно оформлен
             </h1>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="px-6 py-3 rounded-lg bg-purple">
-                Статус: На рассмотрении
+                Статус {{ order?.status }}
               </div>
               <div class="px-6 py-3 rounded-lg bg-card">
-                Дата заказа: 18.09.2022
+                Дата заказа: {{ mappedTimestamp }}
               </div>
             </div>
           </div>
@@ -60,7 +103,7 @@ export default {
                 <th scope="col" class="py-3 px-6">Сумма</th>
               </thead>
               <tbody>
-                <tr>
+                <tr v-for="product in order?.order_items">
                   <td scope="row" class="py-4 px-6 rounded-l-2xl bg-card">
                     <div
                       class="flex flex-col lg:flex-row min-w-[200px] gap-2 lg:gap-6"
@@ -69,162 +112,130 @@ export default {
                         class="shrink-0 overflow-hidden w-[64px] lg:w-[84px] h-[64px] lg:h-[84px] rounded-2xl"
                       >
                         <img
-                          src="/images/products/1.jpg"
+                          :src="product?.product.thumbnail"
                           class="object-cover w-full h-full"
                           alt="SteelSeries Aerox 3 Snow"
                         />
                       </div>
                       <div class="py-3">
                         <h4 class="text-xs sm:text-sm xl:text-md font-bold">
-                          <a
-                            href="product.html"
+                          <router-link
+                            :to="{
+                              name: 'product',
+                              params: { slug: product.product.slug },
+                            }"
                             class="inline-block text-white hover:text-pink"
-                            >SteelSeries Aerox 3 Snow</a
+                            >{{ product.product.title }}</router-link
                           >
                         </h4>
                         <ul class="space-y-1 mt-2 text-xs">
-                          <li class="text-body">Цвет: Белый</li>
-                          <li class="text-body">Размер (хват): Средний</li>
+                          <li
+                            v-for="option in product?.option_values"
+                            class="text-body"
+                          >
+                            {{ option.option.title + ": " + option.value }}
+                          </li>
                         </ul>
                       </div>
                     </div>
                   </td>
                   <td class="py-4 px-6 bg-card">
-                    <div class="font-medium whitespace-nowrap">43 900 ₽</div>
-                  </td>
-                  <td class="py-4 px-6 bg-card">2</td>
-                  <td class="py-4 px-6 bg-card rounded-r-2xl">
-                    <div class="font-medium whitespace-nowrap">87 800 ₽</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td scope="row" class="py-4 px-6 rounded-l-2xl bg-card">
-                    <div
-                      class="flex flex-col lg:flex-row min-w-[200px] gap-2 lg:gap-6"
-                    >
-                      <div
-                        class="shrink-0 overflow-hidden w-[64px] lg:w-[84px] h-[64px] lg:h-[84px] rounded-2xl"
-                      >
-                        <img
-                          src="/images/products/5.jpg"
-                          class="object-cover w-full h-full"
-                          alt="SteelSeries Arctis 5 White 2019 Edition"
-                        />
-                      </div>
-                      <div class="py-3">
-                        <h4 class="text-xs sm:text-sm xl:text-md font-bold">
-                          <a
-                            href="product.html"
-                            class="inline-block text-white hover:text-pink"
-                            >SteelSeries Arctis 5 White 2019 Edition</a
-                          >
-                        </h4>
-                        <ul class="space-y-1 mt-2 text-xs">
-                          <li class="text-body">Цвет: Белый</li>
-                        </ul>
-                      </div>
+                    <div class="font-medium whitespace-nowrap">
+                      {{ product.price }} ₽
                     </div>
                   </td>
-                  <td class="py-4 px-6 bg-card">
-                    <div class="font-medium whitespace-nowrap">58 730 ₽</div>
-                  </td>
-                  <td class="py-4 px-6 bg-card">1</td>
+                  <td class="py-4 px-6 bg-card">{{ product.quantity }}</td>
                   <td class="py-4 px-6 bg-card rounded-r-2xl">
-                    <div class="font-medium whitespace-nowrap">58 730 ₽</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td scope="row" class="py-4 px-6 rounded-l-2xl bg-card">
-                    <div
-                      class="flex flex-col lg:flex-row min-w-[200px] gap-2 lg:gap-6"
-                    >
-                      <div
-                        class="shrink-0 overflow-hidden w-[64px] lg:w-[84px] h-[64px] lg:h-[84px] rounded-2xl"
-                      >
-                        <img
-                          src="/images/products/9.jpg"
-                          class="object-cover w-full h-full"
-                          alt="Hator Hypersport V2 (HTC-948) Black/White"
-                        />
-                      </div>
-                      <div class="py-3">
-                        <h4 class="text-xs sm:text-sm xl:text-md font-bold">
-                          <a
-                            href="product.html"
-                            class="inline-block text-white hover:text-pink"
-                            >Hator Hypersport V2 (HTC-948) Black/White</a
-                          >
-                        </h4>
-                        <ul class="space-y-1 mt-2 text-xs">
-                          <li class="text-body">Цвет: Черно-белый</li>
-                        </ul>
-                      </div>
+                    <div class="font-medium whitespace-nowrap">
+                      {{ product.price * product.quantity }}
+                      ₽
                     </div>
-                  </td>
-                  <td class="py-4 px-6 bg-card">
-                    <div class="font-medium whitespace-nowrap">142 800 ₽</div>
-                  </td>
-                  <td class="py-4 px-6 bg-card">1</td>
-                  <td class="py-4 px-6 bg-card rounded-r-2xl">
-                    <div class="font-medium whitespace-nowrap">142 800 ₽</div>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-
+          <!-- Summary -->
           <div class="mt-12">
-            <!-- Summary -->
             <table class="w-full text-left">
               <tbody>
                 <tr>
                   <th scope="row" class="pb-2 text-xs font-medium">
                     Имя и фамилия:
                   </th>
-                  <td class="pb-2 text-xs">Данил Шевцов</td>
+                  <td class="pb-2 text-xs">
+                    {{ order?.name + " " + order?.surname }}
+                  </td>
                 </tr>
-                <tr>
+                <tr v-if="order?.phone_number">
                   <th scope="row" class="pb-2 text-xs font-medium">
                     Номер телефона:
                   </th>
-                  <td class="pb-2 text-xs">+7 (975) 177-88-99</td>
+                  <td class="pb-2 text-xs">{{ order?.phone_number }}</td>
                 </tr>
                 <tr>
                   <th scope="row" class="pb-2 text-xs font-medium">E-mail:</th>
-                  <td class="pb-2 text-xs">shop@cutcode.ru</td>
+                  <td class="pb-2 text-xs">{{ order?.email }}</td>
                 </tr>
                 <tr>
                   <th scope="row" class="pb-2 text-xs font-medium">
                     Способ доставки:
                   </th>
-                  <td class="pb-2 text-xs">
-                    Адресная доставка: г. Москва, ул. Иванова, 27
+                  <td
+                    v-if="order.delivery_method === 'delivery'"
+                    class="pb-2 text-xs"
+                  >
+                    Адресная доставка:
+                    {{ `${order.country} ${order.city} ${order.street}` }}
+                  </td>
+                  <td
+                    v-if="order.delivery_method === 'pickup'"
+                    class="pb-2 text-xs"
+                  >
+                    Самовывоз
                   </td>
                 </tr>
                 <tr>
                   <th scope="row" class="pb-2 text-xs font-medium">
                     Метод оплаты:
                   </th>
-                  <td class="pb-2 text-xs">Наличными</td>
+                  <td
+                    v-if="order.payment_method === 'cash'"
+                    class="pb-2 text-xs"
+                  >
+                    Наличными
+                  </td>
+                  <td
+                    v-if="order.payment_method === 'card'"
+                    class="pb-2 text-xs"
+                  >
+                    Кредитной картой
+                  </td>
                 </tr>
-                <tr>
+                <tr v-if="totalDiscount">
                   <th scope="row" class="pb-2 text-xs font-medium">
                     Промокод:
                   </th>
-                  <td class="pb-2 text-xs">15 398 ₽</td>
+                  <td class="pb-2 text-xs">{{ totalDiscount }} ₽</td>
                 </tr>
                 <tr>
                   <th scope="row" class="text-md 2xl:text-lg font-black">
                     Итого:
                   </th>
-                  <td class="text-md 2xl:text-lg font-black">245 930 ₽</td>
+                  <td class="text-md 2xl:text-lg font-black">
+                    {{ totalCart - totalDiscount }} ₽
+                  </td>
                 </tr>
               </tbody>
             </table>
 
             <div class="flex flex-wrap gap-4 mt-8">
-              <a href="index.html" class="btn btn-pink">←&nbsp; За покупками</a>
-              <a href="orders.html" class="btn btn-purple">Мои заказы</a>
+              <router-link :to="{ name: 'catalog' }" class="btn btn-pink"
+                >←&nbsp; За покупками</router-link
+              >
+              <router-link :to="{ name: 'orders' }" class="btn btn-purple"
+                >Мои заказы</router-link
+              >
             </div>
           </div>
         </section>

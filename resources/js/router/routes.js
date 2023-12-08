@@ -16,6 +16,7 @@ import SearchPage from "../Pages/SearchPage.vue";
 import SignUpPage from "../Pages/SignUpPage.vue";
 import SignUpMailPage from "../Pages/SugnUpMailPage.vue";
 import FavoritPage from "../Pages/FavoritPage.vue";
+import { getCart } from "../../helpers/Cart";
 
 const routes = [
     {
@@ -61,6 +62,10 @@ const routes = [
         path: "/cart",
         component: CartPage,
         name: "cart",
+        beforeEnter: (to, from, next) => {
+            if (sessionStorage.getItem("cart")) next();
+            else next({ name: "catalog" });
+        },
     },
     {
         path: "/catalog",
@@ -71,6 +76,10 @@ const routes = [
         path: "/checkout",
         component: CheckoutPage,
         name: "checkout",
+        beforeEnter: (to, from, next) => {
+            if (sessionStorage.getItem("cart")) next();
+            else next({ name: "catalog" });
+        },
     },
     {
         path: "/edit-profile",
@@ -92,11 +101,7 @@ const routes = [
         path: "/order-items/:id",
         component: OrdersItemPage,
         name: "order.items",
-        props: (route) => ({
-            id: route.params.id,
-            timestamp: route.query.timestamp,
-            status: route.query.status,
-        }),
+        props: true,
     },
     {
         path: "/search",
@@ -104,9 +109,10 @@ const routes = [
         name: "search",
     },
     {
-        path: "/order-success",
+        path: "/order-success/:id",
         component: OrderSuccessPage,
         name: "order.success",
+        props: true,
     },
     {
         path: "/favorit",

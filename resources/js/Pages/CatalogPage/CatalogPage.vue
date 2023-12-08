@@ -23,7 +23,6 @@ export default {
 
   async created() {
     this.productsData = await fetchProducts(this.$store.state.filters);
-    console.log("prod", this.productsData);
   },
 
   data() {

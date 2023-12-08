@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\QuantityException;
 use App\Http\Requests\OrderRequest;
-use App\Http\Resources\OrderResource;
 use App\Models\Option;
 use App\Models\OptionValue;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\OrderItem;
 use App\Notifications\OrderNotification;
-use Faker\Core\Number;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
-use Ramsey\Uuid\Type\Integer;
+
+
 
 class OrderController extends Controller
 {
@@ -38,10 +37,17 @@ class OrderController extends Controller
 
     public function store(OrderRequest $request)
     {
-        $user = $request->safe()->except("cart");
         $cart = json_decode($request->safe()->only("cart")['cart'], true);
+        $queryQuantityIds = [];
+
+        foreach ($cart as $product) {
+            // Проверка на наличие товара и довавление квери,id, опций в массив или выброс ошибки
+            $queryQuantityIds[] = $this->checkQuantity($product);
+        }
+
+        $user = $request->safe()->except("cart");
         $promo = $request->safe()->only('promo');
-        $status = "Заказ создан";
+        $status = "Ожидает оплаты";
         // Добавление данных заказчика в БД
 
         $order = Order::create(
@@ -50,13 +56,6 @@ class OrderController extends Controller
                 "status" => $status,
             ])
         );
-
-        $queryQuantityIds = [];
-
-        foreach ($cart as $product) {
-            // Проверка на наличие товара и довавление квери,id, опций в массив или выброс ошибки
-            $queryQuantityIds[] = $this->checkQuantity($product);
-        }
 
         foreach ($cart as $key => $product) {
             // Добавление товара к заказу
@@ -78,7 +77,7 @@ class OrderController extends Controller
                 $orderItem->optionValues()->attach($item['id']);
             }
         }
-
+        // Уведоиление
         Notification::route('mail', $order['email'])
             ->notify(new OrderNotification($order));
 
@@ -88,14 +87,16 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $orderId)
+    public function show(Order $order)
     {
-        return OrderResource::collection(
-            OrderItem::where('order_id', $orderId)
-                ->with('optionValues')
-                ->with('product')
-                ->get()
-        );
+
+        return Order::with([
+            'orderItems' => [
+                'product',
+                'optionValues:id,option_id,value' => ['option:id,title'],
+                'promoCode',
+            ]
+        ])->findOrFail($order->id);
     }
 
     /**
@@ -116,11 +117,14 @@ class OrderController extends Controller
     }
 
 
+
+
     protected function checkQuantity($product)
     {;
         $queryQuantityIds = [];
 
         foreach ($product['options'] as  $option => $valueOpt) {
+
             $sortedOption = Option::where('title', $option)->first();
 
             $optionValue = OptionValue::where('option_id', $sortedOption->id)
@@ -131,7 +135,7 @@ class OrderController extends Controller
                 ->where('product_id', $product['id'])
                 ->where('option_value_id', $optionValue->id);
 
-            // Проверка наличия товара и списание товара со склада
+            // Проверка наличия товара
 
             if (($productQuantity = $optionValueProduct->first('quantity')->quantity) < $product['quantity']) {
                 return throw new QuantityException(

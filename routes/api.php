@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\FilterConroller;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromoController;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,8 @@ Route::post('/products', [ProductController::class, 'showPaginate'])->name('prod
 Route::post('/products/id', [ProductController::class, 'showByIds'])->name('products.showbyids');
 Route::apiResource('product', ProductController::class);
 Route::apiResource('order', OrderController::class);
+Route::post('/payment', [PaymentController::class, 'getPaymentLink'])->name('payment.link');
+Route::post('/callbackPay', [PaymentController::class, 'callbackPay'])->name('payment.callback');
 Route::apiResource('promo', PromoController::class);
 
 Route::group(

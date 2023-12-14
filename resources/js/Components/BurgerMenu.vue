@@ -90,11 +90,6 @@ export default {
           >
         </router-link>
         <div v-if="user" class="flex items-center">
-          <img
-            src="/images/avatar.jpg"
-            class="w-14 h-14 rounded-full"
-            alt="Александр Калинин"
-          />
           <div class="flex flex-col items-start ml-4">
             <span class="text-dark text-xs md:text-sm font-bold">{{
               user.name
@@ -130,8 +125,8 @@ export default {
           >
         </nav>
         <div class="flex flex-wrap items-center space-x-6 mt-8">
-          <router-link
-            to="#"
+          <a
+            href="https://www.youtube.com/"
             class="inline-flex items-center text-darkblue hover:text-purple"
             target="_blank"
             rel="nofollow noopener"
@@ -142,9 +137,9 @@ export default {
               alt="YouTube"
             />
             <span class="ml-2 lg:ml-3 text-xxs font-semibold">YouTube</span>
-          </router-link>
-          <router-link
-            to="#"
+          </a>
+          <a
+            href="https://web.telegram.org/a/"
             class="inline-flex items-center text-darkblue hover:text-purple"
             target="_blank"
             rel="nofollow noopener"
@@ -155,7 +150,7 @@ export default {
               alt="Telegram"
             />
             <span class="ml-2 lg:ml-3 text-xxs font-semibold">Telegram</span>
-          </router-link>
+          </a>
         </div>
       </div>
       <!-- /.mmenu-inner -->

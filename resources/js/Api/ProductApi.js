@@ -9,6 +9,7 @@ export async function fetchProducts(filters = {}) {
         maxPrice = null,
         minPrice = null,
         title = null,
+        options = null,
     } = filters;
 
     await axios.get("/sanctum/csrf-cookie");
@@ -21,6 +22,7 @@ export async function fetchProducts(filters = {}) {
         minPrice: minPrice,
         maxPrice: maxPrice,
         title: title,
+        options: options,
     });
 
     return res.data;

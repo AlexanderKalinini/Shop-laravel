@@ -1,6 +1,7 @@
 <script>
 import { loadCategoriesForHomePage } from "../Api/CategoryApi.js";
 import { loadCategories } from "../Api/CategoryApi.js";
+import { mapState } from "vuex";
 
 export default {
   props: {
@@ -12,26 +13,29 @@ export default {
     } else {
       this.categories = await loadCategories();
     }
+    this.category = this.$store.state.filters.category;
   },
 
   data() {
     return {
       categories: [],
-      category: this.$store.state.filters.category,
+      category: "",
     };
   },
   computed: {
-    storeCategory() {
-      return this.$store.state.filters.category;
-    },
+    ...mapState({
+      filterCategory: (state) => state.filters.category,
+    }),
   },
+
   watch: {
-    category(newCat, old) {
-      this.$store.commit("setFilter", { category: newCat, page: null });
+    filterCategory(newFil, oldFil) {
+      this.category = newFil;
     },
 
-    storeCategory(newCat, oldCat) {
+    category(newCat, oldCat) {
       this.category = newCat;
+      this.$store.commit("setFilter", { category: newCat, page: null });
     },
   },
 };

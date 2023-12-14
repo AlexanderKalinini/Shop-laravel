@@ -34,11 +34,9 @@ export default {
     async getOrder(id) {
       try {
         const res = await getOrderById(id);
-        console.log(res);
+
         this.order = res;
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     },
   },
 };

@@ -16,7 +16,6 @@ import SearchPage from "../Pages/SearchPage.vue";
 import SignUpPage from "../Pages/SignUpPage.vue";
 import SignUpMailPage from "../Pages/SugnUpMailPage.vue";
 import FavoritPage from "../Pages/FavoritPage.vue";
-import { getCart } from "../../helpers/Cart";
 
 const routes = [
     {

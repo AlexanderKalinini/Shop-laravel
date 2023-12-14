@@ -69,5 +69,4 @@ export default {
     </div>
     <!-- /.container -->
   </footer>
-  <FooterModals />
 </template>

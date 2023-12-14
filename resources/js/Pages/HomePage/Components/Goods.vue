@@ -1,20 +1,22 @@
 <script>
 import axios from "axios";
-import { addProductToCart } from "../../../../helpers/Cart";
+import { addProductToCart, alert } from "../../../../helpers/Cart";
 import { sessionStorageEvent } from "../../../../helpers/Session";
-
 import Favorit from "../../../../helpers/Favorit";
+import { useToast, POSITION } from "vue-toastification";
 
 export default {
   created() {
     this.loadGoods();
     this.favorit = new Favorit();
+    this.toast = useToast();
   },
 
   data() {
     return {
       products: [],
       favorit: null,
+      toast: null,
     };
   },
 
@@ -33,6 +35,13 @@ export default {
     callProductToCart(product) {
       addProductToCart(product);
       sessionStorageEvent("cart");
+    },
+    callAddToFavorit(product) {
+      this.favorit.setFavorit(product);
+      sessionStorageEvent("favorit");
+    },
+    callDeleteFromFavorit(product) {
+      this.favorit.deleteFavoritById(product), sessionStorageEvent("favorit");
     },
   },
 };
@@ -81,7 +90,7 @@ export default {
             </svg>
           </button>
           <button
-            @click="favorit.setFavorit(product), sessionStorageEvent('favorit')"
+            @click="callAddToFavorit(product)"
             v-if="!favorit.getFavoritById(product.id)"
             class="w-[56px] !h-[56px] !px-0 btn btn-purple"
             title="Добавить в избранное"
@@ -99,10 +108,7 @@ export default {
           </button>
           <button
             v-if="favorit.getFavoritById(product.id)"
-            @click="
-              favorit.deleteFavoritById(product.id),
-                sessionStorageEvent('favorit')
-            "
+            @click="callDeleteFromFavorit(product)"
             class="w-[56px] !h-[56px] !px-0 btn btn-purple"
             title="Удалить из избранного"
           >

@@ -5,8 +5,8 @@ import LayoutComponent from "../Layuot/LayoutComponent.vue";
 import { postOrder as order, getPromoByTitle } from "../Api/OrderApi";
 import { signup } from "../Api/AuthApi";
 import axios from "axios";
-import router from "../router/router";
 import { getPaymentLink } from "../Api/Payment";
+import router from "../router/router";
 
 export default {
   components: {
@@ -36,6 +36,7 @@ export default {
       promoError: null,
       quantityError: null,
       deliveryCosts: 0,
+      buttonDisabled: false,
       order: {
         name: null,
         surname: null,
@@ -86,7 +87,12 @@ export default {
         this.promoError = err.response.statusText;
       }
     },
-
+    disableButton() {
+      this.buttonDisabled = true;
+      setTimeout(() => {
+        this.buttonDisabled = false;
+      }, 3000);
+    },
     async paymentRedirect(orderId) {
       const res = await getPaymentLink({
         price: +this.total,
@@ -96,28 +102,41 @@ export default {
     },
 
     async signup() {
-      if (this.createAccount) {
-        await axios.get("/sanctum/csrf-cookie");
-        try {
-          await signup({
-            name: this.order.name + " " + this.order.surname,
-            email: this.order.email,
-            password: this.password,
-            password_confirmation: this.password_confirmation,
-          });
-        } catch (err) {
-          this.errors = err.response.data.errors;
-        }
-        this.$store.dispatch("fetchUser");
+      await axios.get("/sanctum/csrf-cookie");
+      try {
+        const res = await signup({
+          name: this.order.name + " " + this.order.surname,
+          email: this.order.email,
+          password: this.password,
+          password_confirmation: this.password_confirmation,
+        });
+
+        return res;
+      } catch (err) {
+        this.errors = err.response.data.errors;
       }
     },
 
     async postOrder() {
+      this.disableButton();
+      if (this.createAccount) {
+        let res = await this.signup();
+        if (!res) return;
+        this.$store.dispatch("fetchUser");
+      }
+
       await axios.get("/sanctum/csrf-cookie");
       try {
         this.order.totalPrice = this.totalCart - this.countDiscount;
         const res = await order(this.order);
-        await this.paymentRedirect(res.data.id);
+        if (this.order.paymentMethod === "card") {
+          await this.paymentRedirect(res.data.id);
+        } else {
+          router.push({
+            name: "order.success",
+            params: { id: res.data.id },
+          });
+        }
         clearCart();
       } catch (err) {
         this.errors = err?.response?.data?.errors;
@@ -365,7 +384,7 @@ export default {
                       value="cash"
                     />
                     <label for="payment-method-1" class="form-radio-label"
-                      >Наличными</label
+                      >Наличными при получении</label
                     >
                   </div>
                   <div class="form-radio">
@@ -376,7 +395,7 @@ export default {
                       value="card"
                     />
                     <label for="payment-method-2" class="form-radio-label"
-                      >Кредитной картой</label
+                      >Онлайн оплата</label
                     >
                   </div>
                 </div>
@@ -527,7 +546,8 @@ export default {
 
                 <!-- Process to checkout -->
                 <button
-                  @click.prevent="signup(), postOrder()"
+                  :disabled="buttonDisabled"
+                  @click.prevent="postOrder()"
                   type="submit"
                   class="w-full btn btn-pink"
                 >

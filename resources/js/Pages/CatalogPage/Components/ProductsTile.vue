@@ -99,7 +99,7 @@ export default {
             <button
               v-if="favorit.getFavoritById(product.id)"
               @click="
-                favorit.deleteFavoritById(product.id),
+                favorit.deleteFavoritById(product),
                   sessionStorageEvent('favorit')
               "
               class="w-[56px] !h-[56px] !px-0 btn btn-purple"

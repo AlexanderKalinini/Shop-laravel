@@ -29,11 +29,13 @@ class AuthController extends Authenticate
     {
         $credentials = $request->validated();
 
-        $user = User::create([
-            'name' => $credentials["name"],
-            'email' => $credentials["email"],
-            'password' => Hash::make($credentials["password"]),
-        ]);
+        $user = User::create(
+            [
+                'name' => $credentials["name"],
+                'email' => $credentials["email"],
+                'password' => Hash::make($credentials["password"])
+            ],
+        );
 
         if ($user) {
             Auth::login($user);

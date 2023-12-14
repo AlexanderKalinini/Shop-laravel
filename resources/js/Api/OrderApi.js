@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export async function getPromoByTitle(title) {
-    console.log(title);
     if (!title) return;
     const res = await axios.get("/api/promo/" + title);
     return res.data;

@@ -7,6 +7,7 @@ namespace App\Http\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Filters\AbstractFilter;
 use Illuminate\Support\Facades\DB;
+use App\Models\OptionValue;
 
 
 class ProductFilter extends AbstractFilter
@@ -17,6 +18,8 @@ class ProductFilter extends AbstractFilter
     public const MAX_PRICE = 'maxPrice';
     public const SORT = 'sort';
     public const TITLE = 'title';
+    public const OPTIONS = 'options';
+
 
 
 
@@ -33,6 +36,7 @@ class ProductFilter extends AbstractFilter
             static::MAX_PRICE => [$this, 'maxPrice'],
             static::SORT => [$this, 'sort'],
             static::TITLE => [$this, 'title'],
+            static::OPTIONS => [$this, 'options'],
 
         ];
     }
@@ -55,6 +59,19 @@ class ProductFilter extends AbstractFilter
         if ($value === 'expensive') {
             $builder->orderBy('price', 'desc');
         }
+    }
+
+    public function options(Builder $builder, array $values): void
+    {
+        $productIds = OptionValue::whereIn('value', $values)
+            ->with('products:id')  // Загружаем связанные продукты, оставляем только ID
+            ->get()
+            ->pluck('products')
+            ->collapse()
+            ->pluck('id')
+            ->all();
+
+        $builder->whereIn('id', $productIds);
     }
 
     public function title(Builder $builder, string $value): void

@@ -22,6 +22,7 @@ export default {
   },
 
   async created() {
+    this.$store.commit("setFilter", { title: null });
     this.productsData = await fetchProducts(this.$store.state.filters);
   },
 
@@ -54,7 +55,7 @@ export default {
 
     filters: {
       async handler(newFilter) {
-        this.productsData = await fetchProducts(newFilter);
+        this.productsData = await fetchProducts({ ...newFilter, title: null });
       },
       deep: true,
     },

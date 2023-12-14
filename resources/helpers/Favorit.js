@@ -1,4 +1,5 @@
 import { addObjToSession, getObjFromSession } from "./Session";
+import { alert } from "./Cart";
 
 export default class {
     static _favorits = [];
@@ -20,11 +21,12 @@ export default class {
         if (!this._favorits) {
             this._favorits = [product];
             addObjToSession("favorits", this._favorits);
+            alert(`Товар ${product.title} добавлен в избранное`);
         } else {
             if (this._favorits.includes(product)) return;
             this._favorits.push(product);
-            // this._favorits = [...new Set(this._favorits)];
             addObjToSession("favorits", this._favorits);
+            alert(`Товар ${product.title} добавлен в избранное`);
         }
     }
 
@@ -32,9 +34,12 @@ export default class {
         return this._favorits?.find((el) => el.id === id);
     }
 
-    deleteFavoritById(id) {
-        this._favorits = this._favorits.filter((el) => {
-            return el.id !== id;
+    deleteFavoritById(product) {
+        this._favorits = this._favorits.filter((favorit) => {
+            if (favorit.id === product.id) {
+                alert(`Товар ${favorit.title} удален из избранного`);
+            }
+            return favorit.id !== product.id;
         });
         addObjToSession("favorits", this._favorits);
     }

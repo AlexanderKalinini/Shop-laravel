@@ -42,9 +42,7 @@ export default {
         const res = await getOrderById(id);
 
         this.order = res;
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     },
   },
 };
@@ -77,7 +75,7 @@ export default {
             </h1>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="px-6 py-3 rounded-lg bg-purple">
-                Статус {{ order?.status }}
+                Статус: {{ order?.status }}
               </div>
               <div class="px-6 py-3 rounded-lg bg-card">
                 Дата заказа: {{ mappedTimestamp }}
@@ -209,7 +207,7 @@ export default {
                     v-if="order.payment_method === 'card'"
                     class="pb-2 text-xs"
                   >
-                    Кредитной картой
+                    Онлайн оплата
                   </td>
                 </tr>
                 <tr v-if="totalDiscount">

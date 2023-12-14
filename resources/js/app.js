@@ -2,15 +2,16 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router/router";
 import { store } from "./store/store";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 
-createApp(App).use(router).use(store).mount("#app");
+const app = createApp(App);
 
-//     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-//         anchor.addEventListener("click", function (e) {
-//             e.preventDefault();
-//
-//             document.querySelector(this.getAttribute("href")).scrollIntoView({
-//                 behavior: "smooth",
-//             });
-//         });
-//     });
+app.use(Toast, {
+    transition: "Vue-Toastification__bounce",
+    maxToasts: 5,
+    newestOnTop: true,
+})
+    .use(router)
+    .use(store)
+    .mount("#app");

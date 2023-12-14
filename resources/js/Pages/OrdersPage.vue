@@ -19,9 +19,7 @@ export default {
       try {
         const res = await getOrders();
         this.orders = res;
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     },
     async deleteItem(id) {
       await deleteItemById(id);

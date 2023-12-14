@@ -48,7 +48,8 @@ class OrderController extends Controller
         $user = $request->safe()->except("cart");
         $promo = $request->safe()->only('promo');
         $status = "Ожидает оплаты";
-        // Добавление данных заказчика в БД
+
+        //Создание заказа
 
         $order = Order::create(
             array_merge($user, [
@@ -57,8 +58,9 @@ class OrderController extends Controller
             ])
         );
 
+        // Добавление товара к заказу
         foreach ($cart as $key => $product) {
-            // Добавление товара к заказу
+
             $orderItem = OrderItem::create(
                 [
                     'order_id' => $order['id'],
@@ -77,7 +79,7 @@ class OrderController extends Controller
                 $orderItem->optionValues()->attach($item['id']);
             }
         }
-        // Уведоиление
+        // Уведомление
         Notification::route('mail', $order['email'])
             ->notify(new OrderNotification($order));
 
@@ -89,7 +91,6 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-
         return Order::with([
             'orderItems' => [
                 'product',
@@ -112,6 +113,7 @@ class OrderController extends Controller
      */
     public function destroy(string $id)
     {
+        //soft delete
         $order = Order::find($id);
         return $order->delete();
     }
@@ -138,7 +140,7 @@ class OrderController extends Controller
             // Проверка наличия товара
 
             if (($productQuantity = $optionValueProduct->first('quantity')->quantity) < $product['quantity']) {
-                return throw new QuantityException(
+                throw new QuantityException(
                     $product['title'],
                     $sortedOption->title,
                     $optionValue->value,

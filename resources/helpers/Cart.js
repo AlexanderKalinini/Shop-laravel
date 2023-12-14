@@ -3,6 +3,9 @@ import {
     addObjToSession,
     sessionStorageEvent,
 } from "./Session";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 export function getCart() {
     return getObjFromSession("cart");
@@ -10,12 +13,15 @@ export function getCart() {
 
 export function clearCart() {
     sessionStorage.removeItem("cart");
-    sessionStorageEvent();
+    sessionStorageEvent("cart");
 }
 
 export function deleteItemFromCart(id, options) {
     let cart = getCart();
     cart = cart.filter((el) => {
+        if (isEqualObjects(el.options, options) && el.id === id) {
+            alert(`Товар ${el.title} удален из корзины`);
+        }
         return !isEqualObjects(el.options, options) || el.id !== id;
     });
     addObjToSession("cart", cart);
@@ -55,11 +61,23 @@ export function totalDiscount(cart = []) {
     }, 0);
 }
 
+export function alert(message = "") {
+    toast(message, {
+        closeButton: false,
+        timeout: 1500,
+        position: "top-center",
+        hideProgressBar: true,
+        toastClassName: "!bg-purple",
+        icon: false,
+    });
+}
+
 export function addProductToCart(
     product,
     quantity = 1,
     options = {},
-    input = false
+    input = false,
+    withAlert = true
 ) {
     if (!quantity) return;
 
@@ -82,6 +100,7 @@ export function addProductToCart(
 
     if (!cart) {
         addObjToSession("cart", [mappedProd]);
+        withAlert && alert(`Товар ${mappedProd.title} добавлен в корзину`);
     } else {
         for (let index = 0; index < cart.length; index++) {
             if (
@@ -99,11 +118,16 @@ export function addProductToCart(
                 }
 
                 addObjToSession("cart", cart);
+
+                withAlert &&
+                    alert(`Товар ${mappedProd.title} добавлен в корзину`);
+
                 return;
             }
         }
 
         cart.push(mappedProd);
         addObjToSession("cart", cart);
+        withAlert && alert(`Товар ${mappedProd.title} добавлен в корзину`);
     }
 }

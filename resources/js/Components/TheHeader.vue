@@ -14,7 +14,6 @@ export default {
 
   created() {
     this.cart = getCart();
-
     this.favorit = new Favorit();
     window.addEventListener("storage", this.handleSession);
   },
@@ -50,9 +49,8 @@ export default {
   watch: {
     async searchInput(newVal, oldVal) {
       if (newVal.length > 3) {
-        const res = await fetchProducts(null, { title: this.searchInput });
-        this.products = res.data;
-        console.log(this.products);
+        const res = await fetchProducts({ title: newVal });
+        this.products = res?.data;
       }
     },
   },
@@ -77,10 +75,10 @@ export default {
       }
     },
 
-    setFilter() {
-      if (this.searchInput != undefined) {
-        this.$store.commit("setFilter", { title: this.searchInput });
-        router.push({ name: "catalog" });
+    async setFilter() {
+      if (this.searchInput) {
+        await this.$store.commit("setFilter", { title: this.searchInput });
+        router.push({ name: "search" });
       }
     },
 
@@ -113,7 +111,7 @@ export default {
           <form class="hidden gap-3 lg:flex">
             <div>
               <input
-                @input="(event) => (searchInput = event.target.value)"
+                @input="searchInput = $event.target.value"
                 @keydown.enter.prevent="setFilter"
                 @blur="resetFilter"
                 type="search"
@@ -127,9 +125,9 @@ export default {
               >
                 <li v-for="product in products">
                   <router-link
-                    :to="{ name: 'product', params: { id: product.id } }"
+                    :to="{ name: 'product', params: { slug: product?.slug } }"
                   >
-                    {{ product.title }}
+                    {{ product?.title }}
                   </router-link>
                 </li>
               </ul>
@@ -206,11 +204,7 @@ export default {
               class="flex items-center text-white transition hover:text-pink"
             >
               <span class="sr-only">Профиль</span>
-              <img
-                :src="user?.thumbnail"
-                class="h-7 w-7 shrink-0 rounded-full md:h-9 md:w-9"
-                alt="user"
-              />
+
               <span class="ml-2 hidden font-medium md:block">{{
                 user?.name
               }}</span>

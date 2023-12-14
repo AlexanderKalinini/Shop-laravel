@@ -13,7 +13,7 @@ export default {
   methods: {
     resetCategory(crumb) {
       if (crumb?.title === "Каталог") {
-        this.$store.commit("setFilter", { category: {}, page: null });
+        this.$store.commit("setFilter", { category: "", page: null });
       }
     },
   },

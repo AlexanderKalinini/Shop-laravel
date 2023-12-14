@@ -68,10 +68,11 @@ class ProductController extends Controller
     public function showByIds(Request $request)
     {
         $data = $request->validate([
-            'productsId' => ['']
+            'productsId' => ['array', 'required']
         ]);
 
-        return Product::whereIn('id', $data['productsId'])->limit(25)->get();
+
+        return ProductResource::collection(Product::whereIn('id', $data['productsId'])->with('optionValues')->limit(25)->get());
     }
 
     /**

@@ -16,7 +16,7 @@ export default {
         ],
       });
       if (notAccess) {
-        next({ name: "home" });
+        next({ name: "notfound" });
       } else next();
     });
   },

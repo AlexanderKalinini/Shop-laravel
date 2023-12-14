@@ -118,7 +118,7 @@ export default {
             <button
               v-if="favorit.getFavoritById(product.id)"
               @click="
-                favorit.deleteFavoritById(product.id),
+                favorit.deleteFavoritById(product),
                   sessionStorageEvent('favorit'),
                   $emit('updateProducts')
               "

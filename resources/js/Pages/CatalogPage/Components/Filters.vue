@@ -2,19 +2,21 @@
 import axios from "axios";
 
 export default {
-  created() {
-    this.getFilters();
+  async created() {
+    await this.getFilters();
+    this.filters.checkedBrands = this.$store.state.filters.brandsId ?? [];
   },
   data() {
     return {
       maxPrice: null,
       minPrice: null,
       brands: [],
+      options: [],
       withLight: null,
       checkedColors: [],
       filters: {
         checkedBrands: [],
-        checkedColors: [],
+        options: [],
         withLight: false,
         minPrice: this.minPrice,
         maxPrice: this.maxPrice,
@@ -29,6 +31,7 @@ export default {
           brandsId: newFilter.checkedBrands,
           maxPrice: newFilter.maxPrice,
           minPrice: newFilter.minPrice,
+          options: newFilter.options,
           page: null,
         });
       },
@@ -41,12 +44,13 @@ export default {
       this.brands = res.data.brands;
       this.maxPrice = res.data.maxPrice;
       this.minPrice = res.data.minPrice;
+      this.options = res.data.options;
     },
 
     resetFilters() {
       this.filters = {
         checkedBrands: [],
-        checkedColors: [],
+        options: [],
         withLight: false,
         minPrice: this.minPrice,
         maxPrice: this.maxPrice,
@@ -99,62 +103,19 @@ export default {
         </div>
       </div>
       <!-- Filter item -->
-      <div>
-        <h5 class="mb-4 text-sm 2xl:text-md font-bold">Цвет</h5>
-        <div class="form-checkbox">
-          <input type="checkbox" id="filters-item-9" />
-          <label for="filters-item-9" class="form-checkbox-label">Белый</label>
-        </div>
-        <div class="form-checkbox">
-          <input type="checkbox" id="filters-item-10" />
-          <label for="filters-item-10" class="form-checkbox-label"
-            >Чёрный</label
-          >
-        </div>
-        <div class="form-checkbox">
-          <input type="checkbox" id="filters-item-11" />
-          <label for="filters-item-11" class="form-checkbox-label"
-            >Желтый</label
-          >
-        </div>
-        <div class="form-checkbox">
-          <input type="checkbox" id="filters-item-12" />
-          <label for="filters-item-12" class="form-checkbox-label"
-            >Розовый</label
-          >
-        </div>
-        <div class="form-checkbox">
-          <input type="checkbox" id="filters-item-13" />
-          <label for="filters-item-13" class="form-checkbox-label"
-            >Красный</label
-          >
-        </div>
-        <div class="form-checkbox">
-          <input type="checkbox" id="filters-item-14" />
-          <label for="filters-item-14" class="form-checkbox-label">Серый</label>
-        </div>
-      </div>
-      <!-- Filter item -->
-      <div>
-        <h5 class="mb-4 text-sm 2xl:text-md font-bold">Подсветка</h5>
-        <div class="form-checkbox">
-          <input type="checkbox" id="filters-item-7" />
-          <label for="filters-item-7" class="form-checkbox-label"
-            >Без подсветки</label
-          >
-        </div>
-        <div class="form-checkbox">
+      <div v-for="(values, option) in options">
+        <h5 class="mb-4 text-sm 2xl:text-md font-bold">{{ option }}</h5>
+        <div v-for="value in values" class="form-checkbox">
           <input
-            v-bind="withLight"
-            value="true"
+            v-model="filters.options"
             type="checkbox"
-            id="filters-item-8"
+            :id="value"
+            :value="value"
           />
-          <label for="filters-item-8" class="form-checkbox-label"
-            >З подсветкой</label
-          >
+          <label :for="value" class="form-checkbox-label">{{ value }}</label>
         </div>
       </div>
+
       <div>
         <button
           @click="resetFilters"

@@ -48,8 +48,9 @@ class PaymentController extends Controller
     public function callbackPay(Request $request)
     {
         $data =  $request->all();
-        $orderId = $data['object']['metadata']['order_id'];
-        $status = $data['object']['status'];
+        $responseObj = $data['object'];
+        $orderId = $responseObj['metadata']['order_id'];
+        $status = $responseObj['status'];
         if ($status === 'succeeded') {
             Order::where('id', $orderId)->update(['status' => 'Заказ оплачен']);
         }

@@ -27,7 +27,7 @@ export default {
     },
 
     callAddToCart(product, quantity, options, input) {
-      addProductToCart(product, quantity, options, input);
+      addProductToCart(product, quantity, options, input, false);
       this.updateCart();
       sessionStorageEvent("cart");
     },
@@ -211,7 +211,7 @@ export default {
             </div>
             <div class="pb-3 lg:pb-0">
               <button
-                @click="callClearCart"
+                @click="callClearCart()"
                 class="text-body hover:text-pink font-medium"
               >
                 Очистить корзину

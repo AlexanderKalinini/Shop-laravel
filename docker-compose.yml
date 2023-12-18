@@ -18,7 +18,7 @@ services:
         volumes:
             - ./:/var/www
             - ./docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini
-        container_name: shop-app
+        container_name: shop
         depends_on:
             - pgsql
     pgsql:
@@ -45,12 +45,12 @@ services:
             - PGADMIN_DEFAULT_EMAIL=bach8616@gmail.com
             - PGADMIN_DEFAULT_PASSWORD=root
         container_name: pgadmin
-    # npm:
-    #     image: node:alpine
-    #     container_name: npm
-    #     volumes:
-    #         - ./:/var/www/html
-    #     ports:
-    #         - 3000:5173
-    #     working_dir: /var/www/html
-    #     command: "npm run dev"
+    npm:
+        image: node:alpine
+        container_name: npm
+        volumes:
+            - ./:/var/www/html
+        ports:
+            - 3000:5173
+        working_dir: /var/www/html
+        command: "npm run build"
